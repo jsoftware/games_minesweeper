@@ -1,8 +1,8 @@
 NB. wd GUI for Minesweeper game
 Note 'Example command to run'
-  MinesweeperWD 12 12
+  MinesweeperWd 12 12
 )
-MinesweeperWD_z_=: conew&'mineswpwd'
+MinesweeperWd_z_=: conew&'mineswpwd'
 
 AddonPath=. jpath '~addons/games/minesweeper/'
 
@@ -55,7 +55,7 @@ mswd_update=: 3 : 0
     msg=. ('K'={.msg) {:: 'won';'lost'
     wd 'sbarset status -1 "You ',msg,'! Try again?"'
   end.
-  EMPTY
+  empty''
 )
 
 resizeFrm=: 3 : 0

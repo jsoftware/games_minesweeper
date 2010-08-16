@@ -99,6 +99,7 @@ msgtk_update=: 3 : 0
     msg=. ('K'={.msg) {:: 'won';'lost'
     updateStatusbar 'You ',msg,'! Try again?'
   end.
+  empty''
 )
 
 updateStatusbar=: 3 : 0
@@ -151,7 +152,7 @@ on_drawingarea1_expose_event=: 3 : 0
 )
 
 on_drawingarea1_button_release_event=: 3 : 0
-  isleftbtn=. 1  NB. determine left or right mouse button
+  isleftbtn=. 1  NB.!! determine left or right mouse button
   markTiles`clearTiles@.isleftbtn getTileIdx sysdata
   msgtk_update ''
 )

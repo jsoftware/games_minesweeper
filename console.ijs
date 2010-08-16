@@ -34,7 +34,7 @@ mscon_update=: 3 : 0
     smoutput 'You ',msg,'! Try again?'
     destroy ''
   end.
-  EMPTY
+  empty''
 )
 
 Instructions=: 0 : 0
@@ -66,5 +66,5 @@ display=: 3 : 0
     closeall_jviewmat_ :: ] ''
     ([: viewrgb@; ,.&.>/"1) y
   end.
-  EMPTY
+  empty''
 )
