@@ -8,7 +8,7 @@ NB. =========================================================
 NB. Temporary hacks to make stuff work
 
 NB. media/platimg not published in addons yet.
-SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
+NB. SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
 
 require 'gui/gtk'
 cocurrent 'jgtk'
@@ -49,6 +49,24 @@ gtk_statusbar_push > x x x *c
 gtk_statusbar_remove > n x x x
 gtk_statusbar_set_has_resize_grip > n x i
 )
+libgdk cddef each <;._2 [ 0 : 0
+gdk_pixbuf_new_from_file > x *c x
+)
+readimg=: 3 : 0
+pixbuf=. gdk_pixbuf_new_from_file y;0
+ad=. gdk_pixbuf_get_pixels pixbuf
+w=. gdk_pixbuf_get_width pixbuf
+h=. gdk_pixbuf_get_height pixbuf
+s=. gdk_pixbuf_get_rowstride pixbuf
+if. IF64 do.
+  r=. _2 ic memr ad,0,(s*h*4),JCHAR
+else.
+  r=. memr ad,0,(s*h),JINT
+end.
+g_object_unref pixbuf
+smoutput h,w,$r
+(h,w)$r AND NOTALPHA_jgtkgraph_
+)
 cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
@@ -57,16 +75,16 @@ AddonPath=. jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
 require 'gui/gtk'
-('jgtkgraph';'jgtk';'z') copath 'jgl2'
+NB. ('jgtkgraph';'jgtk';'z') copath 'jgl2'
 coclass 'mineswpgtkglade'
 coinsert 'mineswp';'jgtk'
 
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
-Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 APath=: AddonPath
 
 create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
+  Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
   'GtkBuilder GtkWin'=: 'window' gtkglade APath,'guigtk.glade'
   assert. 0~:GtkBuilder
   assert. 0~:GtkWin
@@ -148,7 +166,7 @@ on_newgame_activate=: msgtk_startnew
 on_help_activate=: mbinfo bind ('Minesweeper Instructions';Instructions)
 on_about_activate=:  mbinfo bind ('About Minesweeper';About)
 on_drawingarea1_expose_event=: 3 : 0
-  'drawingarea1' glimgrgb_jgl2_ ; ,.&.>/"1 Tiles showField IsEnd
+  'drawingarea1' glimgrgb_jgtkgraph_ ; ,.&.>/"1 Tiles showField IsEnd
 )
 
 on_drawingarea1_button_release_event=: 3 : 0
