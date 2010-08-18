@@ -26,7 +26,7 @@ menupop "Help";
 menu help "&Instructions" "" "" "";
 menu about "&About" "" "" "";
 menupopz;
-sbar 1;sbarset status 80 "";sbarshow;
+sbar 1;sbarshow 1;
 xywh 0 0 90 90;cc isifld isigraph rightmove bottommove;
 pas 0 0;pcenter;
 rem form end;
@@ -34,8 +34,11 @@ rem form end;
 
 create=: 3 : 0
   wd MSWD
-  mswd_startnew y
-  wd 'pshow;'
+  newMinefield y
+  'isend msg'=. eval''
+  wd 'sbarset status 80 "',msg,'"'
+  mswd_update@resizeFrm ''
+  wd 'pshow'
 )
 
 destroy=: 3 : 0
@@ -48,13 +51,13 @@ mswd_startnew=: mswd_update@resizeFrm@newMinefield
 mswd_update=: 3 : 0
   'isend msg'=. eval ''
   IsEnd=: isend
-  wd 'psel mswd; setinvalid isifld'
-  wd 'sbarset status -1 "',msg,'"'
+  wd 'set status *',msg
   if. isend do. 
     wdinfo 'Game Over';msg 
     msg=. ('K'={.msg) {:: 'won';'lost'
-    wd 'sbarset status -1 "You ',msg,'! Try again?"'
+    wd 'set status * You ',msg,'! Try again?'
   end.
+  wd 'setinvalid isifld'
   empty''
 )
 
