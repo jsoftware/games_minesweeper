@@ -51,11 +51,11 @@ mswd_startnew=: mswd_update@resizeFrm@newMinefield
 mswd_update=: 3 : 0
   'isend msg'=. eval ''
   IsEnd=: isend
-  wd 'set status *',msg
+  wd 'sbarset status -1 *',msg
   if. isend do. 
     wdinfo 'Game Over';msg 
     msg=. ('K'={.msg) {:: 'won';'lost'
-    wd 'set status * You ',msg,'! Try again?'
+    wd 'sbarset status -1 * You ',msg,'! Try again?'
   end.
   wd 'setinvalid isifld'
   empty''
