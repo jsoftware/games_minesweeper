@@ -64,11 +64,11 @@ readimg=: 3 : 0
   if. IF64 do.
     r=. _2 ic memr ad,0,(s*h*4),JCHAR
   else.
-    r=. memr ad,0,(s*h),JINT
+    r=. memr ad,0,(w*h),JINT
   end.
   g_object_unref img
   NB. smoutput h,w,$r
-  (h,w)$r AND NOTALPHA_jgtkgraph_
+  (h,w)$r
 )
 cocurrent 'base'
 NB. End Hacks
