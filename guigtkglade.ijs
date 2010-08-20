@@ -8,7 +8,7 @@ NB. =========================================================
 NB. Temporary hacks to make stuff work
 
 NB. media/platimg not published in addons yet.
-NB. SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
+SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
 
 require 'gui/gtk'
 cocurrent 'jgtk'
@@ -49,23 +49,26 @@ gtk_statusbar_push > x x x *c
 gtk_statusbar_remove > n x x x
 gtk_statusbar_set_has_resize_grip > n x i
 )
-libgdk cddef each <;._2 [ 0 : 0
+libpixbuf cddef each <;._2 [ 0 : 0
 gdk_pixbuf_new_from_file > x *c x
+gdk_pixbuf_add_alpha > x x i x x x
 )
 readimg=: 3 : 0
-pixbuf=. gdk_pixbuf_new_from_file y;0
-ad=. gdk_pixbuf_get_pixels pixbuf
-w=. gdk_pixbuf_get_width pixbuf
-h=. gdk_pixbuf_get_height pixbuf
-s=. gdk_pixbuf_get_rowstride pixbuf
-if. IF64 do.
-  r=. _2 ic memr ad,0,(s*h*4),JCHAR
-else.
-  r=. memr ad,0,(s*h),JINT
-end.
-g_object_unref pixbuf
-smoutput h,w,$r
-(h,w)$r AND NOTALPHA_jgtkgraph_
+  buf=. gdk_pixbuf_new_from_file y;0
+  img=. gdk_pixbuf_add_alpha buf;0;0;0;0
+  g_object_unref buf
+  ad=. gdk_pixbuf_get_pixels img
+  w=. gdk_pixbuf_get_width img
+  h=. gdk_pixbuf_get_height img
+  s=. gdk_pixbuf_get_rowstride img
+  if. IF64 do.
+    r=. _2 ic memr ad,0,(s*h*4),JCHAR
+  else.
+    r=. memr ad,0,(s*h),JINT
+  end.
+  g_object_unref img
+  NB. smoutput h,w,$r
+  (h,w)$r AND NOTALPHA_jgtkgraph_
 )
 cocurrent 'base'
 NB. End Hacks
