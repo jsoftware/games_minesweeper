@@ -1,15 +1,14 @@
 NB. Gtk GUI for Minesweeper game
-
 Note 'Example command to run'
   MinesweeperGtk 12 12
 )
 MinesweeperGtk_z_=: conew&'mineswpgtk'
-
+gettext_z_=: ]
 NB. =========================================================
 NB. Temporary hacks to make stuff work
 
 NB. media/platimg not published in addons yet.
-SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
+NB. SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
 
 require 'gui/gtk'
 cocurrent 'jgtk'
@@ -25,63 +24,87 @@ gtk_statusbar_push > x x x *c
 gtk_statusbar_remove > n x x x
 gtk_statusbar_set_has_resize_grip > n x i
 )
+libgdk cddef each <;._2 [ 0 : 0
+gdk_pixbuf_new_from_file > x *c x
+gdk_pixbuf_new_from_file_utf8 > x *c x
+gdk_pixbuf_add_alpha > x x i x x x
+)
+readimg=: 3 : 0
+if. 0= buf=. gdk_pixbuf_new_from_file y;0 do. 0 0$0 return. end.
+img=. gdk_pixbuf_add_alpha buf;0;0;0;0
+g_object_unref buf
+ad=. gdk_pixbuf_get_pixels img
+w=. gdk_pixbuf_get_width img
+h=. gdk_pixbuf_get_height img
+s=. gdk_pixbuf_get_rowstride img
+assert. s=4*w
+if. IF64 do.
+  r=. _2 ic memr ad,0,(w*h*4),JCHAR
+else.
+  r=. memr ad,0,(w*h),JINT
+end.
+g_object_unref img
+(h,w)$r
+)
 cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-AddonPath=. jpath '~addons/games/minesweeper/'
+AddonPath_z_=: jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
-require 'gui/gtk'
-('jgtkgraph';'jgtk';'z') copath 'jgl2'
-coclass 'mineswpgtk'
-coinsert 'mineswp';'jgtk'
 
-NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
-Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+require 'gui/gtk'
+coclass 'mineswpgtk'
+coinsert 'jgtk'
 
 create=: 3 : 0
-  if. -.IFGTK do. gtkinit'' end.
-   NB.! build gtk form manually (not using Glade).
-NB.   'GtkBuilder GtkWin'=: 'window' gtkglade APath,'guigtk.glade'
-NB.   assert. 0~:GtkBuilder
-NB.   assert. 0~:GtkWin
-NB.   GtkDA=: gtk_builder_get_object GtkBuilder;'drawingarea1'
-NB.   GtkSbar=: gtk_builder_get_object GtkBuilder;'statusbar1'    NB. get statusbar widget from builder
-NB.   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'status updates' NB. get context id to use for all msgs
-
-  msgtk_startnew y
-  
-  gtk_widget_show GtkWin
-  if. -.IFGTK do. gtk_main'' end.
+if. -.IFGTK do. gtkinit'' end.
+y=. (0=#y){:: y ; 9 9
+NB. must after gtkinit''
+Tiles_mineswp_=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+NB. must after Tiles is defined
+getTileIdx_mineswp_=: [: >:@:<. (#>{.Tiles_mineswp_) %~ 2 {. 0&".
+newwindow 'Minesweeper'
+consig window;'destroy';'window_destroy'
+box1=. gtk_vbox_new 0 0
+gtk_container_add window, box1
+menu_init''
+mb=. edit_menu''
+gtk_box_pack_start box1, mb, 0 0 0
+locGB=: ((#>{.Tiles_mineswp_)*y) conew 'jgtkgraph'
+coinsert__locGB coname''
+gtk_box_pack_start box1, gtkbox__locGB, 1 1 0
+GtkSbar=: gtk_statusbar_new ''
+SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
+gtk_box_pack_start box1, GtkSbar, 1 1 0
+windowfinish''
+newMinefield_mineswp_ y
+msgtk_update''
+if. -.IFGTK do. gtk_main'' end.
 )
 
 destroy=: 3 : 0
-  NB.! remove cbreg entries
-  cbfree''
-  codestroy''
+NB.! remove cbreg entries
+cbfree''
+codestroy''
 )
 
-msgtk_startnew=: msgtk_update@newMinefield
-
 msgtk_update=: 3 : 0
-  'isend msg'=. eval ''
-  IsEnd=: isend
-  NB.!! repaint gtk form
-  updateStatusbar msg
-  if. isend do.
-    mbinfo 'Game Over';msg
-    msg=. ('K'={.msg) {:: 'won';'lost'
-    updateStatusbar 'You ',msg,'! Try again?'
-  end.
+'isend msg'=. eval_mineswp_ ''
+glpaint__locGB''
+updateStatusbar msg
+if. isend do.
+  mbinfo 'Game Over';msg
+  msg=. ('K'={.msg) {:: 'won';'lost'
+  updateStatusbar 'You ',msg,'! Try again?'
+end.
 )
 
 updateStatusbar=: 3 : 0
-  gtk_statusbar_pop GtkSbar;SbarContxt   NB. clear last msg
-  gtk_statusbar_push GtkSbar;SbarContxt;y
+gtk_statusbar_pop GtkSbar;SbarContxt   NB. clear last msg
+gtk_statusbar_push GtkSbar;SbarContxt;y
 )
-
-getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
 
 Instructions=: 0 : 0
 
@@ -105,28 +128,105 @@ Uses J7 graphics/gtk for GUI
 )
 
 NB. Event Handlers
-on_window_delete_event=: 0:
-
-on_exit_activate=: 3 : 0
-  gtk_widget_destroy GtkWin
+NB. =========================================================
+NB. this is the main drawing program
+paint=: 3 : 0
+'isend msg'=. eval_mineswp_ ''
+glpixels 0 0,((#>{.Tiles_mineswp_)*$Marked_mineswp_), , ; ,.&.>/"1 Tiles_mineswp_ showField_mineswp_ isend
 )
 
-on_window_destroy=: 3 : 0
-  g_object_unref GtkBuilder
-  if. -.IFGTK do. gtk_main_quit '' end.
-  destroy ''
+window_delete=: 0:
+
+window_destroy=: 3 : 0
+if. -.IFGTK do. gtk_main_quit '' end.
+destroy ''
+0
 )
 
-on_newgame_activate=: msgtk_startnew
+NB. =========================================================
+NB. moue event
 
-on_help_activate=: mbinfo bind ('Minesweeper Instructions';Instructions)
-on_about_activate=:  mbinfo bind ('About Minesweeper';About)
-on_drawingarea1_expose_event=: 3 : 0
-  'drawingarea1' glimgrgb_jgl2_ ; ,.&.>/"1 Tiles showField IsEnd
+mbldown=: 3 : 0
+if. +./ ((#>{.Tiles_mineswp_)*$Marked_mineswp_) <: 2{.".sysdata do. return. end.
+clearTiles_mineswp_ getTileIdx_mineswp_ sysdata
+msgtk_update ''
 )
 
-on_drawingarea1_button_release_event=: 3 : 0
-  isleftbtn=. 1  NB. determine left or right mouse button
-  markTiles`clearTiles@.isleftbtn getTileIdx sysdata
-  msgtk_update ''
+mbrdown=: 3 : 0
+if. +./ ((#>{.Tiles_mineswp_)*$Marked_mineswp_) <: 2{.".sysdata do. return. end.
+markTiles_mineswp_ getTileIdx_mineswp_ sysdata
+msgtk_update ''
 )
+
+NB. =========================================================
+NB. menu bar
+
+NB. =========================================================
+NB. replace nb. by NB.
+fixNB=: 3 : 0
+x=. I. 'nb.' E. y
+'NB' (0 1 +/~ x) } y
+)
+
+getmenu=: 3 : 0
+ndx=. MENUIDS i. <y
+if. ndx=#MENUIDS do.
+  ((gettext 'menu not found: '),y) assert 0
+end.
+ndx pick MENUDEF
+)
+
+menu_init=: 3 : 0
+f=. < @ (<;._1) @ (','&,)
+j=. f;._2 Menus
+MENUIDS=: {.&> j
+MENUDEF=: }.each j
+0
+)
+
+Menus=: fixNB 0 : 0
+gamenew,,_New Game,,,gamenew_activate
+gameoption,,_Options,,,gameoption_activate
+gamequit,gtk-quit,_Quit,cQ,Quit the program,gamequit_activate
+
+help,,_Help,,Help,helphelp_activate
+helpabout,gtk-about,_About,,Help About,helpabout_activate
+)
+
+edit_menu=: 3 : 0
+mb=. gtk_menu_bar_new''
+game_menu mb
+help_menu mb
+gtk_widget_show_all mb
+mb
+)
+
+game_menu=: 3 : 0
+pop=. create_menu_popup y;gettext 'Game'
+con=. create_menu_container pop
+con ccmenu 'gamenew'
+con ccmenu 'gameoption'
+create_menu_sep con
+con ccmenu 'gamequit'
+)
+
+help_menu=: 3 : 0
+pop=. create_menu_popup y;gettext '_Help'
+con=. create_menu_container pop
+con ccmenu 'help'
+con ccmenu 'helpabout'
+)
+
+gamenew_activate=: 3 : 0
+newMinefield_mineswp_ $Marked_mineswp_
+msgtk_update ''
+)
+
+gameoption_activate=: 0:
+
+gamequit_activate=: 3 : 0
+gtk_widget_destroy window
+)
+
+helphelp_activate=: mbinfo bind ((gettext 'Minesweeper Instructions');Instructions)
+helpabout_activate=: mbinfo bind ((gettext 'About Minesweeper');About)
