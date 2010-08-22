@@ -1,6 +1,5 @@
 NB. Generic minesweeper engine
 
-require 'media/platimg'
 coclass 'mineswp'
 
 newMinefield=: 3 : 0
