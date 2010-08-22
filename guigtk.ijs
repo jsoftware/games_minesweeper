@@ -10,6 +10,24 @@ NB. Temporary hacks to make stuff work
 require 'gui/gtk'
 cocurrent 'jgtk'
 
+NB. gtkgraph changes not yet in released gui/gtk
+glpaintx_jgtkgraph_=: 3 : 0 "1
+  glclear''
+  paint''
+  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
+)
+
+configure_event_jgtkgraph_=: 3 : 0
+'widget event data'=. y
+if. 0=gtkwin do. gtkwin=: getGtkWidgetWindow gtkda end.
+if. 0=gtkdagc do. gtkdagc=: getdagc gtkda end.
+gtkwh=: 2 3{gtkxywh=: getGtkWidgetAllocation gtkda
+if. gtkpx do. g_object_unref gtkpx end.
+gtkpx=: gdk_pixmap_new gtkwin,gtkwh,_1
+if. 0=gtkgc do. gtkgc=: gdk_gc_new gtkwin end.
+0
+)
+
 NB. gtk functions not yet declared in released gui/gtk
 libgtk cddef each <;._2 [ 0 : 0
 gtk_statusbar_get_context_id > x x *c
@@ -26,6 +44,8 @@ gdk_pixbuf_new_from_file > x *c x
 gdk_pixbuf_new_from_file_utf8 > x *c x
 gdk_pixbuf_add_alpha > x x i x x x
 )
+
+NB. new verb for reading file images to rgba matrix using gtk.
 readimg=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
   if. 0= buf=. gdk_pixbuf_new_from_file y;0 do. 0 0$0 return. end.
@@ -142,6 +162,7 @@ window_delete=: 0:
 
 window_destroy=: 3 : 0
   if. -.IFGTK do. gtk_main_quit '' end.
+  ((#~ _999 = _999 ". >) copath >locGB) copath >locGB  NB. avoid locale error in Win/GtkIDE
   destroy ''
   0
 )
