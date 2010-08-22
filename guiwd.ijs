@@ -90,7 +90,10 @@ Uses J6 Window Driver for GUI
 )
 
 NB. Event Handlers
-mswd_new_button=: mswd_startnew
+mswd_new_button=: 3 : 0
+  mswd_startnew $Map
+)
+
 mswd_exit_button=: destroy
 mswd_close=: destroy
 mswd_cancel=: destroy

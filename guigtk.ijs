@@ -3,12 +3,13 @@ Note 'Example command to run'
   MinesweeperGtk 12 12
 )
 MinesweeperGtk_z_=: conew&'mineswpgtk'
-gettext_z_=: ]
+
 NB. =========================================================
 NB. Temporary hacks to make stuff work
 
-NB. media/platimg not published in addons yet.
 SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
+
+gettext_z_=: ]
 
 require 'gui/gtk'
 cocurrent 'jgtk'
@@ -45,14 +46,13 @@ readimg=: 3 : 0
     r=. memr ad,0,(w*h),JINT
   end.
   g_object_unref img
-  if. -.IFGTK do. gtk_main'' end.  
   (h,w)$r
 )
 cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-AddonPath_z_=: jpath '~addons/games/minesweeper/'
+AddonPath=. jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
 
@@ -62,12 +62,12 @@ coinsert 'mineswp';'jgtk'
 
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
-IsEnd=: 0
 
 create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
   y=. (0=#y){:: y ; 9 9
   newMinefield y
+  IsEnd=: 0  
   newwindow 'Minesweeper'
   consig window;'destroy';'window_destroy'
   box1=. gtk_vbox_new 0 0
@@ -76,7 +76,8 @@ create=: 3 : 0
   mb=. edit_menu''
   gtk_box_pack_start box1, mb, 0 0 0
   locGB=: ((#>{.Tiles)*y) conew 'jgtkgraph'
-  coinsert__locGB (coname''),copath 'mineswpgtk'
+  locWN=: coname''
+  ('jgtkgraph';locWN,copath locWN) copath >locGB
   gtk_box_pack_start box1, gtkbox__locGB, 1 1 0
   GtkSbar=: gtk_statusbar_new ''
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
@@ -92,6 +93,8 @@ destroy=: 3 : 0
   destroy__locGB''
   codestroy''
 )
+
+msgtk_startnew=: msgtk_update@newMinefield
 
 msgtk_update=: 3 : 0
   'isend msg'=. eval ''
@@ -126,7 +129,7 @@ How to play:
 
 About=: 0 : 0
 Minesweeper Game
-Author: Ric Sherlock
+Authors: Ric Sherlock, Bill Lam
 
 Uses J7 graphics/gtk for GUI
 )
@@ -147,18 +150,18 @@ window_destroy=: 3 : 0
 )
 
 NB. =========================================================
-NB. moue event
+NB. mouse events
 
 mbldown=: 3 : 0
   if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
-  clearTiles getTileIdx sysdata
-  msgtk_update ''
+  clearTiles__locWN getTileIdx sysdata
+  msgtk_update__locWN ''
 )
 
 mbrdown=: 3 : 0
   if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
-  markTiles getTileIdx sysdata
-  msgtk_update ''
+  markTiles__locWN getTileIdx sysdata
+  msgtk_update__locWN ''
 )
 
 NB. =========================================================
@@ -221,8 +224,7 @@ help_menu=: 3 : 0
 )
 
 gamenew_activate=: 3 : 0
-  newMinefield $Marked
-  msgtk_update ''
+  msgtk_startnew $Map
 )
 
 gameoption_activate=: 0:
