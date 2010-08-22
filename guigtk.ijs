@@ -7,10 +7,6 @@ MinesweeperGtk_z_=: conew&'mineswpgtk'
 NB. =========================================================
 NB. Temporary hacks to make stuff work
 
-SystemFolders_j_=: (<jpath '~Addons') (<0 1)}SystemFolders_j_
-
-gettext_z_=: ]
-
 require 'gui/gtk'
 cocurrent 'jgtk'
 
@@ -25,7 +21,7 @@ gtk_statusbar_push > x x x *c
 gtk_statusbar_remove > n x x x
 gtk_statusbar_set_has_resize_grip > n x i
 )
-libpixbuf cddef each <;._2 [ 0 : 0
+(IFWIN{libgdk,libpixbuf) cddef each <;._2 [ 0 : 0
 gdk_pixbuf_new_from_file > x *c x
 gdk_pixbuf_new_from_file_utf8 > x *c x
 gdk_pixbuf_add_alpha > x x i x x x
@@ -60,6 +56,8 @@ require 'gui/gtk'
 coclass 'mineswpgtk'
 coinsert 'mineswp';'jgtk'
 
+gettext=: ]
+
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
 
@@ -90,7 +88,6 @@ create=: 3 : 0
 destroy=: 3 : 0
   NB.! remove cbreg entries
   cbfree''
-  destroy__locGB''
   codestroy''
 )
 
@@ -208,7 +205,7 @@ edit_menu=: 3 : 0
 )
 
 game_menu=: 3 : 0
-  pop=. create_menu_popup y;gettext 'Game'
+  pop=. create_menu_popup y;gettext '_Game'
   con=. create_menu_container pop
   con ccmenu 'gamenew'
   con ccmenu 'gameoption'
