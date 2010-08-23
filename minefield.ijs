@@ -1,4 +1,5 @@
 NB. Generic minesweeper engine
+NB. Used by the various User Interface (ui*.ijs) scripts
 
 coclass 'mineswp'
 

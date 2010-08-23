@@ -1,0 +1,4 @@
+games/minesweeper - change history
+
+== 1.0.0 ==
+ * Initial release

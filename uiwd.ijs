@@ -1,4 +1,6 @@
 NB. wd GUI for Minesweeper game
+NB. works for jwdw and jwdp J6 front ends.
+
 Note 'Example command to run'
   MinesweeperWd 12 12
 )
@@ -7,6 +9,7 @@ MinesweeperWd_z_=: conew&'mineswpwd'
 AddonPath=. jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
+NB. require 'games/minesweeper/minefield'
 require 'media/platimg gl2'
 coclass 'mineswpwd'
 coinsert 'mineswp';'pplatimg';'jgl2'
@@ -14,6 +17,7 @@ coinsert 'mineswp';'pplatimg';'jgl2'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 
+NB. Form definition
 MSWD=: 0 : 0
 pc mswd nosize nomax;pn "Minesweeper";
 menupop "Game";
@@ -31,6 +35,9 @@ xywh 0 0 90 90;cc isifld isigraph rightmove bottommove;
 pas 0 0;pcenter;
 rem form end;
 )
+
+NB. Methods
+NB. =========================================================
 
 create=: 3 : 0
   wd MSWD
@@ -69,26 +76,6 @@ resizeFrm=: 3 : 0
 
 getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
 
-Instructions=: 0 : 0
-Object: 
-   Uncover (clear) all the tiles that are not mines.
-
-How to play:
- - click on a tile to clear it
- - right-click on a tile to mark it as a suspected mine
- - if you uncover a number, that is the number of mines adjacent 
-    to the tile
- - if you uncover a mine the game ends (you lose)
- - if you uncover all tiles that are not mines the game ends (you win).
-)
-
-About=: 0 : 0
-Minesweeper Game
-Author: Ric Sherlock
-
-Uses J6 Window Driver for GUI
-)
-
 NB. Event Handlers
 mswd_new_button=: 3 : 0
   mswd_startnew $Map
@@ -118,4 +105,27 @@ mswd_about_button=: 3 : 0
 
 mswd_help_button=: 3 : 0
   wdinfo 'Minesweeper Instructions';Instructions
+)
+
+NB. Text Nouns
+NB. =========================================================
+
+Instructions=: 0 : 0
+Object: 
+   Uncover (clear) all the tiles that are not mines.
+
+How to play:
+ - click on a tile to clear it
+ - right-click on a tile to mark it as a suspected mine
+ - if you uncover a number, that is the number of mines adjacent 
+    to the tile
+ - if you uncover a mine the game ends (you lose)
+ - if you uncover all tiles that are not mines the game ends (you win).
+)
+
+About=: 0 : 0
+Minesweeper Game
+Author: Ric Sherlock
+
+Uses J6 Window Driver for GUI
 )

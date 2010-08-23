@@ -1,4 +1,4 @@
-NB. Console UI for Minesweeper game
+NB. Console user interface for Minesweeper game
 Note 'Example command to run'
   fld=: MinesweeperCon 6 6
 )
@@ -7,13 +7,17 @@ MinesweeperCon_z_=: conew&'mineswpcon'
 AddonPath=. jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
+NB. require 'games/minesweeper/minefield'
 require 'media/platimg viewmat'
 coclass 'mineswpcon'
 coinsert 'mineswp'
 
-TextDisplay=: 1
+TextDisplay=: 1     NB. set to zero to display minefield using viewmat
 TilesG26=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 TilesA=: ' 12345678**.?'
+
+NB. Methods
+NB. =========================================================
 
 create=: 3 : 0
   smoutput Instructions
@@ -37,6 +41,22 @@ mscon_update=: 3 : 0
   empty''
 )
 
+clear=: mscon_update@clearTiles
+mark=: mscon_update@markTiles
+
+display=: 3 : 0
+  if. TextDisplay do.
+    smoutput@< y
+  else.
+    closeall_jviewmat_ :: ] ''
+    ([: viewrgb@; ,.&.>/"1) y
+  end.
+  empty''
+)
+
+NB. Text Nouns
+NB. =========================================================
+
 Instructions=: 0 : 0
 === MineSweeper ===
 Object: 
@@ -54,17 +74,4 @@ How to play:
    to the tile
  - if you uncover a mine (*) the game ends (you lose)
  - if you uncover all tiles that are not mines the game ends (you win).
-)
-
-clear=: mscon_update@clearTiles
-mark=: mscon_update@markTiles
-
-display=: 3 : 0
-  if. TextDisplay do.
-    smoutput@< y
-  else.
-    closeall_jviewmat_ :: ] ''
-    ([: viewrgb@; ,.&.>/"1) y
-  end.
-  empty''
 )

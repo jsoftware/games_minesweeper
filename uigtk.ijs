@@ -1,4 +1,6 @@
-NB. Gtk GUI for Minesweeper game
+NB. Gtk user interface for Minesweeper game
+NB. works with J7 gui/gtk addon (either from GtkIDE or console).
+
 Note 'Example command to run'
   MinesweeperGtk 12 12
 )
@@ -71,7 +73,7 @@ NB. =========================================================
 AddonPath=. jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
-
+NB. require 'games/minesweeper/minefield'
 require 'gui/gtk'
 coclass 'mineswpgtk'
 coinsert 'mineswp';'jgtk'
@@ -79,7 +81,6 @@ coinsert 'mineswp';'jgtk'
 gettext=: ]
 
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
-getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
 
 create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
@@ -130,6 +131,57 @@ updateStatusbar=: 3 : 0
   gtk_statusbar_push GtkSbar;SbarContxt;y
 )
 
+getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
+
+NB. Event Handlers
+NB. =========================================================
+
+paint=: 3 : 0
+  glpixels 0 0,((#>{.Tiles)*$Map), , ; ,.&.>/"1 Tiles showField IsEnd
+)
+
+window_delete=: 0:
+
+window_destroy=: 3 : 0
+  if. -.IFGTK do. gtk_main_quit '' end.
+  ((#~ _999 = _999 ". >) copath >locGB) copath >locGB  NB. avoid locale error in Win/GtkIDE
+  destroy ''
+  0
+)
+
+
+NB. mouse events
+NB. ---------------------------------------------------------
+mbldown=: 3 : 0
+  if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
+  clearTiles__locWN getTileIdx sysdata
+  msgtk_update__locWN ''
+)
+
+mbrdown=: 3 : 0
+  if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
+  markTiles__locWN getTileIdx sysdata
+  msgtk_update__locWN ''
+)
+
+NB. menu events
+NB. ---------------------------------------------------------
+gamenew_activate=: 3 : 0
+  msgtk_startnew $Map
+)
+
+gameoption_activate=: 0:
+
+gamequit_activate=: 3 : 0
+  gtk_widget_destroy window
+)
+
+helphelp_activate=: mbinfo bind ((gettext 'Minesweeper Instructions');Instructions)
+helpabout_activate=: mbinfo bind ((gettext 'About Minesweeper');About)
+
+NB. Text Nouns
+NB. =========================================================
+
 Instructions=: 0 : 0
 
 Object:
@@ -151,41 +203,10 @@ Authors: Ric Sherlock, Bill Lam
 Uses J7 graphics/gtk for GUI
 )
 
-NB. Event Handlers
+
+NB. Menu bar
 NB. =========================================================
-NB. this is the main drawing program
-paint=: 3 : 0
-  glpixels 0 0,((#>{.Tiles)*$Marked), , ; ,.&.>/"1 Tiles showField IsEnd
-)
 
-window_delete=: 0:
-
-window_destroy=: 3 : 0
-  if. -.IFGTK do. gtk_main_quit '' end.
-  ((#~ _999 = _999 ". >) copath >locGB) copath >locGB  NB. avoid locale error in Win/GtkIDE
-  destroy ''
-  0
-)
-
-NB. =========================================================
-NB. mouse events
-
-mbldown=: 3 : 0
-  if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
-  clearTiles__locWN getTileIdx sysdata
-  msgtk_update__locWN ''
-)
-
-mbrdown=: 3 : 0
-  if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
-  markTiles__locWN getTileIdx sysdata
-  msgtk_update__locWN ''
-)
-
-NB. =========================================================
-NB. menu bar
-
-NB. =========================================================
 NB. replace nb. by NB.
 fixNB=: 3 : 0
   x=. I. 'nb.' E. y
@@ -240,16 +261,3 @@ help_menu=: 3 : 0
   con ccmenu 'help'
   con ccmenu 'helpabout'
 )
-
-gamenew_activate=: 3 : 0
-  msgtk_startnew $Map
-)
-
-gameoption_activate=: 0:
-
-gamequit_activate=: 3 : 0
-  gtk_widget_destroy window
-)
-
-helphelp_activate=: mbinfo bind ((gettext 'Minesweeper Instructions');Instructions)
-helpabout_activate=: mbinfo bind ((gettext 'About Minesweeper');About)
