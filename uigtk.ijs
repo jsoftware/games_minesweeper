@@ -145,6 +145,7 @@ NB. status bar
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
   gtk_box_pack_start box1, GtkSbar, 1 1 0
 
+  gtk_window_set_type_hint window,GDK_WINDOW_TYPE_HINT_DIALOG
   windowfinish''
   msgtk_update''
   if. -.IFGTK do. gtk_main'' end.
