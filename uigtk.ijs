@@ -12,24 +12,6 @@ NB. Temporary hacks to make stuff work
 require 'gui/gtk'
 cocurrent 'jgtk'
 
-NB. gtkgraph changes not yet in released gui/gtk
-glpaintx_jgtkgraph_=: 3 : 0 "1
-  glclear''
-  paint''
-  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
-)
-
-configure_event_jgtkgraph_=: 3 : 0
-'widget event data'=. y
-if. 0=gtkwin do. gtkwin=: getGtkWidgetWindow gtkda end.
-if. 0=gtkdagc do. gtkdagc=: getdagc gtkda end.
-gtkwh=: 2 3{gtkxywh=: getGtkWidgetAllocation gtkda
-if. gtkpx do. g_object_unref gtkpx end.
-gtkpx=: gdk_pixmap_new gtkwin,gtkwh,_1
-if. 0=gtkgc do. gtkgc=: gdk_gc_new gtkwin end.
-0
-)
-
 NB. gtk functions not yet declared in released gui/gtk
 libgtk cddef each <;._2 [ 0 : 0
 gtk_statusbar_get_context_id > x x *c
@@ -47,6 +29,9 @@ gdk_pixbuf_new_from_file_utf8 > x *c x
 gdk_pixbuf_add_alpha > x x i x x x
 )
 
+NB. =========================================================
+NB. pixbuf utilities
+NB. =========================================================
 NB. new verb for reading file images to rgba matrix using gtk.
 readimg=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
@@ -66,11 +51,62 @@ readimg=: 3 : 0
   g_object_unref img
   (h,w)$r
 )
+
+OR=: 23 b./
+NB. gtk pixels (int) are ABGR with A 255
+NB. opengl (and normal folk?) are ARGB with A 0
+NB. glpixels and glqpixels need to make these adjustments
+3 : 0''
+if. IF64 do.
+  ALPHA=: 0{_3 ic 0 0 0 255 255 255 255 255{a.
+else.
+  ALPHA=: 0{_2 ic 0 0 0 255{a.
+end.
+''
+)
+NOTALPHA=: 0{_2 ic 255 255 255 0{a.
+
+NB. =========================================================
+pixbuf_setpixels=: 4 : 0
+gtkpx=. x
+'a b w h'=. 4{.y
+d=. 4}.y
+NB. d=. flip_rgb d
+d=. d OR ALPHA
+if. IF64 do. d=. 2 ic d end.
+NB. create new pixbuf from data
+NB. ad,cmap,alpha,bits,w,h,rowstride,destroyfn,fndata
+buf=. gdk_pixbuf_new_from_data (15!:14<'d'),GDK_COLORSPACE_RGB,1,8,w,h,(4*w),0,0
+NB. bufreport buf
+if. buf do.
+  gdk_draw_pixbuf gtkpx,0,buf,0,0,a,b,w,h,0,0,0
+end.
+g_object_unref buf
+)
+
+NB. =========================================================
+NB. mouse event utilities
+NB. =========================================================
+get_button=: 3 : 0
+256#.endian a.i.memr y,GdkEventButton_button,4
+)
+
+NB. event type - distinguish between button 2button 3button
+get_type=: 3 : 0
+memr y,0 1,JINT
+)
+
+get_button_event_data=: 3 : 0
+mousepos=. <.2 3{;gdk_event_get_coords y;(,0.0);,0.0
+state=. 2{;gdk_event_get_state y;,0
+(get_button y),(get_type y),mousepos,(2 3{getGtkWidgetAllocation gtkda),state
+)
+
 cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-AddonPath=. jpath '~addons/games/minesweeper/'
+AddonPath_z_=: jpath '~addons/games/minesweeper/'
 
 load AddonPath,'minefield.ijs'
 NB. require 'games/minesweeper/minefield'
@@ -86,21 +122,29 @@ create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
   y=. (0=#y){:: y ; 9 9
   newMinefield y
-  IsEnd=: 0  
+  IsEnd=: 0
   newwindow 'Minesweeper'
   consig window;'destroy';'window_destroy'
   box1=. gtk_vbox_new 0 0
   gtk_container_add window, box1
+NB. menu bar
   menu_init''
   mb=. edit_menu''
   gtk_box_pack_start box1, mb, 0 0 0
-  locGB=: ((#>{.Tiles)*y) conew 'jgtkgraph'
-  locWN=: coname''
-  ('jgtkgraph';locWN,copath locWN) copath >locGB
-  gtk_box_pack_start box1, gtkbox__locGB, 1 1 0
+NB. drawing area
+  gtkda=: gtk_drawing_area_new''
+  gtk_widget_set_size_request gtkda,((#>{.Tiles)*y)
+  NB. GDK_LEAVE_NOTIFY_MASK,GDK_POINTER_MOTION_HINT_MASK
+  events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POINTER_MOTION_MASK
+  gtk_widget_add_events gtkda, OR events
+  consig3 gtkda;'expose_event';'gtkda_expose_event'
+  consig3 gtkda;'button_press_event';'gtkda_button_press_event'
+  gtk_box_pack_start box1, gtkda, 1 1 0
+NB. status bar
   GtkSbar=: gtk_statusbar_new ''
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
   gtk_box_pack_start box1, GtkSbar, 1 1 0
+
   windowfinish''
   msgtk_update''
   if. -.IFGTK do. gtk_main'' end.
@@ -117,7 +161,7 @@ msgtk_startnew=: msgtk_update@newMinefield
 msgtk_update=: 3 : 0
   'isend msg'=. eval ''
   IsEnd=: isend
-  glpaint__locGB''
+  gtk_widget_queue_draw gtkda
   updateStatusbar msg
   if. isend do.
     mbinfo 'Game Over';msg
@@ -136,36 +180,53 @@ getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
 NB. Event Handlers
 NB. =========================================================
 
-paint=: 3 : 0
-  glpixels 0 0,((#>{.Tiles)*$Map), , ; ,.&.>/"1 Tiles showField IsEnd
-)
-
 window_delete=: 0:
 
 window_destroy=: 3 : 0
   if. -.IFGTK do. gtk_main_quit '' end.
-  ((#~ _999 = _999 ". >) copath >locGB) copath >locGB  NB. avoid locale error in Win/GtkIDE
   destroy ''
   0
 )
 
-
-NB. mouse events
-NB. ---------------------------------------------------------
-mbldown=: 3 : 0
-  if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
-  clearTiles__locWN getTileIdx sysdata
-  msgtk_update__locWN ''
+NB. drawing area expose events
+NB. =========================================================
+NB. gtkwin      gtkda window
+NB. gtkpx       offscreen pixmap
+NB. gtkwh
+gtkda_expose_event=: 3 : 0
+  'widget event data'=. y
+NB. house keeping
+  gtkwin=. getGtkWidgetWindow widget
+  gtkdagc=. getdagc widget
+  gtkwh=. 2 3{getGtkWidgetAllocation widget
+  gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
+NB. reset background
+  gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0
+NB. the real 'paint'
+  gtkpx pixbuf_setpixels 0 0,((#>{.Tiles)*$Map), , ; ,.&.>/"1 Tiles showField IsEnd
+NB. render on drawable
+  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
+NB. clean up
+  g_object_unref gtkpx
 )
 
-mbrdown=: 3 : 0
-  if. +./ ((#>{.Tiles)*$Marked) <: 2{.".sysdata do. return. end.
-  markTiles__locWN getTileIdx sysdata
-  msgtk_update__locWN ''
+NB. drawing area mouse events
+NB. =========================================================
+gtkda_button_press_event=: 3 : 0
+'widget event data'=. y
+  'button type x1 y1 w h state'=. evdata=. get_button_event_data event
+  if. +./ ((#>{.Tiles)*$Marked) <: x1,y1 do. return. end.
+  if. 1=button do.
+    clearTiles getTileIdx ":2}.evdata
+    msgtk_update ''
+  elseif. 3=button do.
+    markTiles getTileIdx ":2}.evdata
+    msgtk_update ''
+  end.
 )
 
 NB. menu events
-NB. ---------------------------------------------------------
+NB. =========================================================
 gamenew_activate=: 3 : 0
   msgtk_startnew $Map
 )
@@ -175,9 +236,6 @@ gameoption_activate=: 0:
 gamequit_activate=: 3 : 0
   gtk_widget_destroy window
 )
-
-helphelp_activate=: mbinfo bind ((gettext 'Minesweeper Instructions');Instructions)
-helpabout_activate=: mbinfo bind ((gettext 'About Minesweeper');About)
 
 NB. Text Nouns
 NB. =========================================================
@@ -203,6 +261,9 @@ Authors: Ric Sherlock, Bill Lam
 Uses J7 graphics/gtk for GUI
 )
 
+NB. nouns Instructions and About must be defined first
+helphelp_activate=: mbinfo bind ((gettext 'Minesweeper Instructions');Instructions)
+helpabout_activate=: mbinfo bind ((gettext 'About Minesweeper');About)
 
 NB. Menu bar
 NB. =========================================================
