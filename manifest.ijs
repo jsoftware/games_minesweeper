@@ -23,6 +23,8 @@ tiles18.png
 tiles26.png
 uiconsole.ijs
 uigtk.ijs
+uigtk.glade
+uigtkglade.ijs
 uiwd.ijs
 )
 
