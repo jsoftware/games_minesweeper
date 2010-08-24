@@ -291,11 +291,11 @@ menu_init=: 3 : 0
 )
 
 Menus=: fixNB 0 : 0
-gamenew,gtk-new,_New Game,,,gamenew_activate
-gameoption,gtk-preferences,_Preferences,,,gameoption_activate
+gamenew,gtk-new,_New Game,,Start a new game,gamenew_activate
+gameoption,gtk-preferences,_Options,,,gameoption_activate
 gamequit,gtk-quit,_Quit,cQ,Quit the program,gamequit_activate
 
-help,gtk-help,_Help,,Help,helphelp_activate
+helphelp,gtk-help,_Instructions,,Help,helphelp_activate
 helpabout,gtk-about,_About,,Help About,helpabout_activate
 )
 
@@ -319,6 +319,6 @@ game_menu=: 3 : 0
 help_menu=: 3 : 0
   pop=. create_menu_popup y;gettext '_Help'
   con=. create_menu_container pop
-  con ccmenu 'help'
+  con ccmenu 'helphelp'
   con ccmenu 'helpabout'
 )

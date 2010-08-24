@@ -25,7 +25,7 @@ menupop "Game";
 menu new "&New Game" "" "" "";
 menu options "&Options" "" "" "";
 menusep;
-menu exit "&Exit" "" "" "";
+menu exit "&Quit" "" "" "";
 menupopz;
 menupop "Help";
 menu help "&Instructions" "" "" "";
@@ -54,7 +54,7 @@ destroy=: 3 : 0
   codestroy ''
 )
 
-mswd_startnew=: mswd_update@resizeFrm@newMinefield
+mswd_startnew=: mswd_update@newMinefield
 
 mswd_update=: 3 : 0
   'isend msg'=. eval ''
