@@ -23,11 +23,58 @@ gtk_statusbar_pop > n x x
 gtk_statusbar_push > x x x *c
 gtk_statusbar_remove > n x x x
 gtk_statusbar_set_has_resize_grip > n x i
+gtk_tooltips_new > x
+gtk_tooltips_set_tip > n x x *c *c
 )
 (IFWIN{libgdk,libpixbuf) cddef each <;._2 [ 0 : 0
 gdk_pixbuf_new_from_file > x *c x
 gdk_pixbuf_new_from_file_utf8 > x *c x
 gdk_pixbuf_add_alpha > x x i x x x
+)
+libgobject cddef each <;._2 [ 0 : 0
+g_object_ref_sink > x x
+)
+
+create_menu_command=: 3 : 0
+'menu id icon text letter tip cb'=. y
+NB. TODO i18n accel/letter
+text=. gettext text
+tip=. gettext tip
+if. #icon do.
+  if. 'check' -: 5{.icon do.
+    cb_item=. gtk_check_menu_item_new_with_mnemonic <text
+    gtk_check_menu_item_set_active cb_item,{. 0 ". 5 }. icon
+  else.
+    cb_item=. gtk_image_menu_item_new_with_mnemonic <text
+    gtk_image_menu_item_set_image cb_item;gtk_image_new_from_stock icon;1
+  end.
+else.
+  cb_item=. gtk_menu_item_new_with_mnemonic <text
+end.
+if. #letter do.
+  msk=. +/('cs'e.letter)#GDK_CONTROL_MASK,GDK_SHIFT_MASK
+  letter=. letter-.'cs'
+  if. 1=#letter do.
+    key=. a.i.{.letter
+  elseif. 'F'={.letter do.
+    key=. GDK_F1 + <:0 ". }.letter
+  elseif. 6=#letter do.
+    key=. GDK_Return
+  elseif. 1 do.
+    key=. a.i.{:letter
+  end.
+  create_menu_accel window;cb_item;id;key;msk
+end.
+if. #tip do.
+  if. 0=nc <'menutooltips' do.
+    gtk_tooltips_set_tip menutooltips;cb_item;tip;<<0
+  end.
+end.
+if. #cb do.
+  consig cb_item;'activate';cb
+end.
+gtk_menu_shell_append menu,cb_item
+cb_item
 )
 
 NB. =========================================================
@@ -129,6 +176,8 @@ create=: 3 : 0
   consig window;'destroy';'window_destroy'
   box1=. gtk_vbox_new 0 0
   gtk_container_add window, box1
+NB. tooltips group
+  menutooltips=: gtk_tooltips_new''
 NB. menu bar
   menu_init''
   mb=. edit_menu''
@@ -185,6 +234,7 @@ NB. =========================================================
 window_delete=: 0:
 
 window_destroy=: 3 : 0
+  g_object_ref_sink menutooltips
   if. -.IFGTK do. gtk_main_quit '' end.
   destroy ''
   0
