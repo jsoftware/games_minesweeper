@@ -32,7 +32,7 @@ gdk_pixbuf_add_alpha > x x i x x x
 NB. =========================================================
 NB. pixbuf utilities
 NB. =========================================================
-NB. new verb for reading file images to rgba matrix using gtk.
+NB. new verb for reading file images to argb matrix using gtk.
 readimg=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
   if. 0= buf=. gdk_pixbuf_new_from_file y;0 do. 0 0$0 return. end.
@@ -106,17 +106,18 @@ cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-AddonPath_z_=: jpath '~addons/games/minesweeper/'
+AddonPath=. jpath '~addons/games/minesweeper/'
 
-load AddonPath,'minefield.ijs'
+require AddonPath,'minefield.ijs'
 NB. require 'games/minesweeper/minefield'
 require 'gui/gtk'
 coclass 'mineswpgtk'
 coinsert 'mineswp';'jgtk'
 
-gettext=: ]
-
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+
+NB. Methods
+NB. =========================================================
 
 create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
@@ -138,21 +139,20 @@ NB. drawing area
   events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POINTER_MOTION_MASK
   gtk_widget_add_events gtkda, OR events
   consig3 gtkda;'expose_event';'gtkda_expose_event'
-  consig3 gtkda;'button_press_event';'gtkda_button_press_event'
+  consig3 gtkda;'button_release_event';'gtkda_button_release_event'
   gtk_box_pack_start box1, gtkda, 1 1 0
 NB. status bar
   GtkSbar=: gtk_statusbar_new ''
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
-  gtk_box_pack_start box1, GtkSbar, 1 1 0
+  gtk_box_pack_start box1, GtkSbar, 0 1 0
 
-  gtk_window_set_type_hint window,GDK_WINDOW_TYPE_HINT_DIALOG
+  gtk_window_set_type_hint window,GDK_WINDOW_TYPE_HINT_NORMAL
   windowfinish''
   msgtk_update''
   if. -.IFGTK do. gtk_main'' end.
 )
 
 destroy=: 3 : 0
-  NB.! remove cbreg entries
   cbfree''
   codestroy''
 )
@@ -177,6 +177,7 @@ updateStatusbar=: 3 : 0
 )
 
 getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
+gettext=: ]
 
 NB. Event Handlers
 NB. =========================================================
@@ -190,7 +191,7 @@ window_destroy=: 3 : 0
 )
 
 NB. drawing area expose events
-NB. =========================================================
+NB. ---------------------------------------------------------
 NB. gtkwin      gtkda window
 NB. gtkpx       offscreen pixmap
 NB. gtkwh
@@ -202,7 +203,7 @@ NB. house keeping
   gtkwh=. 2 3{getGtkWidgetAllocation widget
   gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
 NB. reset background
-  gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0
+NB.   gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0
 NB. the real 'paint'
   gtkpx pixbuf_setpixels 0 0,((#>{.Tiles)*$Map), , ; ,.&.>/"1 Tiles showField IsEnd
 NB. render on drawable
@@ -212,22 +213,19 @@ NB. clean up
 )
 
 NB. drawing area mouse events
-NB. =========================================================
-gtkda_button_press_event=: 3 : 0
+NB. ---------------------------------------------------------
+gtkda_button_release_event=: 3 : 0
 'widget event data'=. y
-  'button type x1 y1 w h state'=. evdata=. get_button_event_data event
-  if. +./ ((#>{.Tiles)*$Marked) <: x1,y1 do. return. end.
-  if. 1=button do.
-    clearTiles getTileIdx ":2}.evdata
-    msgtk_update ''
-  elseif. 3=button do.
-    markTiles getTileIdx ":2}.evdata
-    msgtk_update ''
+  'button type x1 y1 w h state'=. get_button_event_data event
+  if. +./ ($Map) < idx=. getTileIdx ":x1,y1 do. return. end.
+  select. button
+    case. 1 do. msgtk_update@clearTiles idx
+    case. 3 do. msgtk_update@markTiles idx
   end.
 )
 
 NB. menu events
-NB. =========================================================
+NB. ---------------------------------------------------------
 gamenew_activate=: 3 : 0
   msgtk_startnew $Map
 )
@@ -236,6 +234,14 @@ gameoption_activate=: 0:
 
 gamequit_activate=: 3 : 0
   gtk_widget_destroy window
+)
+
+helphelp_activate=: 3 : 0
+  mbinfo ((gettext 'Minesweeper Instructions');Instructions)
+)
+
+helpabout_activate=: 3 : 0
+  mbinfo ((gettext 'About Minesweeper');About)
 )
 
 NB. Text Nouns
@@ -261,10 +267,6 @@ Authors: Ric Sherlock, Bill Lam
 
 Uses J7 graphics/gtk for GUI
 )
-
-NB. nouns Instructions and About must be defined first
-helphelp_activate=: mbinfo bind ((gettext 'Minesweeper Instructions');Instructions)
-helpabout_activate=: mbinfo bind ((gettext 'About Minesweeper');About)
 
 NB. Menu bar
 NB. =========================================================

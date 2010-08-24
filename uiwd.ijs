@@ -8,7 +8,7 @@ MinesweeperWd_z_=: conew&'mineswpwd'
 
 AddonPath=. jpath '~addons/games/minesweeper/'
 
-load AddonPath,'minefield.ijs'
+require AddonPath,'minefield.ijs'
 NB. require 'games/minesweeper/minefield'
 require 'media/platimg gl2'
 coclass 'mineswpwd'
@@ -19,7 +19,7 @@ Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 
 NB. Form definition
 MSWD=: 0 : 0
-pc mswd nosize nomax;pn "Minesweeper";
+pc mswd;pn "Minesweeper";
 menupop "Game";
 menu new "&New Game" "" "" "";
 menu options "&Options" "" "" "";
@@ -70,13 +70,15 @@ mswd_update=: 3 : 0
 
 resizeFrm=: 3 : 0
   isisz=. (#>{.Tiles)*$Map
-  frmsz=. (10 72 + isisz) ,~ 2{. 0". wd 'qformx'
+  frmsz=. (21 81 + isisz) ,~ 2{. 0". wd 'qformx'
   wd 'pmovex ',": frmsz
 )
 
 getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
 
 NB. Event Handlers
+NB. =========================================================
+
 mswd_new_button=: 3 : 0
   mswd_startnew $Map
 )
@@ -90,13 +92,13 @@ mswd_isifld_paint=: 3 : 0
 )
 
 mswd_isifld_mblup=: 3 : 0
-  clearTiles getTileIdx sysdata
-  mswd_update ''
+  if. +./ ($Map) < idx=. getTileIdx sysdata do. return. end.
+  mswd_update@clearTiles idx
 )
 
 mswd_isifld_mbrup=: 3 : 0
-  markTiles getTileIdx sysdata
-  mswd_update ''
+  if. +./ ($Map) < idx=. getTileIdx sysdata do. return. end.
+  mswd_update@markTiles idx
 )
 
 mswd_about_button=: 3 : 0

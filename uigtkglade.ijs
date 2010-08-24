@@ -57,7 +57,7 @@ gdk_pixbuf_add_alpha > x x i x x x
 NB. =========================================================
 NB. pixbuf utilities
 NB. =========================================================
-NB. new verb for reading file images to rgba matrix using gtk.
+NB. new verb for reading file images to argb matrix using gtk.
 readimg=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
   if. 0= buf=. gdk_pixbuf_new_from_file y;0 do. 0 0$0 return. end.
@@ -131,17 +131,17 @@ cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-AddonPath_z_=: jpath '~addons/games/minesweeper/'
-
-load AddonPath,'minefield.ijs'
-NB. require 'games/minesweeper/minefield'
+require '~addons/games/minesweeper/minefield.ijs'
+NB. require 'games/minesweeper/minefield'  NB. use once published
 require 'gui/gtk'
 coclass 'mineswpgtkglade'
 coinsert 'mineswp';'jgtk'
 
-gettext=: ]
-
+AddonPath=: jpath '~addons/games/minesweeper/'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+
+NB. Methods
+NB. =========================================================
 
 create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
@@ -158,7 +158,7 @@ create=: 3 : 0
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'status updates' NB. get context id to use for all msgs
 
 NB.   smoutput gladereport''    NB. display gladereport
-  gtk_window_set_type_hint window,GDK_WINDOW_TYPE_HINT_DIALOG
+  gtk_window_set_type_hint window,GDK_WINDOW_TYPE_HINT_NORMAL
   msgtk_update''
   
   gtk_widget_show window
@@ -166,7 +166,6 @@ NB.   smoutput gladereport''    NB. display gladereport
 )
 
 destroy=: 3 : 0
-  NB.! remove cbreg entries
   cbfree''
   codestroy''
 )
@@ -191,6 +190,7 @@ updateStatusbar=: 3 : 0
 )
 
 getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
+gettext=: ]
 
 NB. Event Handlers
 NB. =========================================================
@@ -205,7 +205,7 @@ on_window_destroy=: 3 : 0
 )
 
 NB. drawing area expose events
-NB. =========================================================
+NB. ---------------------------------------------------------
 NB. gtkwin      gtkda window
 NB. gtkpx       offscreen pixmap
 NB. gtkwh
@@ -227,22 +227,19 @@ NB. clean up
 )
 
 NB. drawing area mouse events
-NB. =========================================================
+NB. ---------------------------------------------------------
 on_drawingarea1_button_release_event=: 3 : 0
 'widget event data'=. y
-  'button type x1 y1 w h state'=. evdata=. get_button_event_data event
-  if. +./ ((#>{.Tiles)*$Marked) <: x1,y1 do. return. end.
-  if. 1=button do.
-    clearTiles getTileIdx ":2}.evdata
-    msgtk_update ''
-  elseif. 3=button do.
-    markTiles getTileIdx ":2}.evdata
-    msgtk_update ''
+  'button type x1 y1 w h state'=. get_button_event_data event
+  if. +./ ($Map) < idx=. getTileIdx ":x1,y1 do. return. end.
+  select. button
+    case. 1 do. msgtk_update@clearTiles idx
+    case. 3 do. msgtk_update@markTiles idx
   end.
 )
 
 NB. menu events
-NB. =========================================================
+NB. ---------------------------------------------------------
 on_newgame_activate=: 3 : 0
   msgtk_startnew $Map
 )
@@ -253,11 +250,17 @@ on_exit_activate=: 3 : 0
   gtk_widget_destroy window
 )
 
+on_help_activate=: 3 : 0
+  mbinfo ('Minesweeper Instructions';Instructions)
+)
+
+on_about_activate=: 3 : 0
+  mbinfo ('About Minesweeper';About)
+)
+
 NB. Text Nouns
 NB. =========================================================
-
 Instructions=: 0 : 0
-
 Object:
    Uncover (clear) all the tiles that are not mines.
 
@@ -276,8 +279,3 @@ Authors: Ric Sherlock, Bill Lam
 
 Uses J7 graphics/gtk for GUI
 )
-
-NB. nouns Instructions and About must be defined first
-on_help_activate=: mbinfo bind ('Minesweeper Instructions';Instructions)
-on_about_activate=:  mbinfo bind ('About Minesweeper';About)
-
