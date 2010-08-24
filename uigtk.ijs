@@ -124,6 +124,7 @@ create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
   newMinefield y
   IsEnd=: 0
+
   newwindow 'Minesweeper GTK'
   consig window;'destroy';'window_destroy'
   box1=. gtk_vbox_new 0 0
@@ -144,10 +145,9 @@ NB. drawing area
 NB. status bar
   GtkSbar=: gtk_statusbar_new ''
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
-  gtk_box_pack_start box1, GtkSbar, 0 1 0
-
-  gtk_window_set_type_hint window,GDK_WINDOW_TYPE_HINT_NORMAL
+  gtk_box_pack_start box1, GtkSbar, 0 0 0
   windowfinish''
+
   msgtk_update''
   if. -.IFGTK do. gtk_main'' end.
 )
