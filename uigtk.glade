@@ -3,8 +3,7 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="window">
-    <property name="title" translatable="yes">Minesweeper GTK</property>
-    <property name="resizable">True</property>
+    <property name="title" translatable="yes">Minesweeper GTK Glade</property>
     <signal name="destroy" handler="on_window_destroy"/>
     <signal name="delete_event" handler="on_window_delete_event"/>
     <child>
@@ -12,7 +11,7 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkMenuBar" id="menubar1">
+          <object class="GtkMenuBar" id="main_menubar">
             <property name="visible">True</property>
             <child>
               <object class="GtkMenuItem" id="mgame">
@@ -23,16 +22,17 @@
                   <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="newgame">
-                        <property name="label">gtk-new</property>
+                      <object class="GtkImageMenuItem" id="gamenew">
+                        <property name="label">_New Game</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="on_newgame_activate"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="options">
+                      <object class="GtkImageMenuItem" id="gameoptions">
                         <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -46,12 +46,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="exit">
-                        <property name="label">E_xit</property>
+                      <object class="GtkImageMenuItem" id="gamequit">
+                        <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
-                        <property name="image">image2</property>
-                        <property name="use_stock">False</property>
+                        <property name="use_stock">True</property>
                         <signal name="activate" handler="on_exit_activate"/>
                       </object>
                     </child>
@@ -68,7 +67,7 @@
                   <object class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="help">
+                      <object class="GtkImageMenuItem" id="helphelp">
                         <property name="label">gtk-help</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -77,7 +76,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="about">
+                      <object class="GtkImageMenuItem" id="helpabout">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -96,18 +95,18 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="drawingarea1">
+          <object class="GtkDrawingArea" id="gtkda_minefld">
             <property name="visible">True</property>
-            <property name="events">GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK</property>
+            <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <signal name="expose_event" handler="on_drawingarea1_expose_event"/>
-            <signal name="button_release_event" handler="on_drawingarea1_button_release_event"/>
+            <signal name="button_release_event" handler="on_gtkda_minefld_button_release_event"/>
           </object>
           <packing>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="statusbar1">
+          <object class="GtkStatusbar" id="sbar">
             <property name="visible">True</property>
             <property name="spacing">2</property>
             <property name="has_resize_grip">False</property>
@@ -120,8 +119,8 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image2">
+  <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="stock">gtk-quit</property>
+    <property name="stock">gtk-new</property>
   </object>
 </interface>

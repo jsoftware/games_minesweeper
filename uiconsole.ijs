@@ -1,5 +1,7 @@
 NB. Console user interface for Minesweeper game
-Note 'Example command to run'
+
+Note 'Example commands to run'
+  fld=: MinesweeperCon ''
   fld=: MinesweeperCon 6 6
 )
 MinesweeperCon_z_=: conew&'mineswpcon'
@@ -24,6 +26,7 @@ create=: 3 : 0
   mscon_startnew y
 )
 destroy=: codestroy
+quit=: destroy
 
 mscon_startnew=: mscon_update@newMinefield
 
@@ -74,4 +77,6 @@ How to play:
    to the tile
  - if you uncover a mine (*) the game ends (you lose)
  - if you uncover all tiles that are not mines the game ends (you win).
+ - quit a game before winning or losing using the command:
+      quit__fld ''
 )

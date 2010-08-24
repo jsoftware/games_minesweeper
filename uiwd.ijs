@@ -1,7 +1,8 @@
 NB. wd GUI for Minesweeper game
 NB. works for jwdw and jwdp J6 front ends.
 
-Note 'Example command to run'
+Note 'Example commands to run'
+  MinesweeperWd ''
   MinesweeperWd 12 12
 )
 MinesweeperWd_z_=: conew&'mineswpwd'

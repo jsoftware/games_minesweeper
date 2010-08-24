@@ -1,7 +1,8 @@
 NB. Gtk user interface for Minesweeper game
 NB. works with J7 gui/gtk addon (either from GtkIDE or console).
 
-Note 'Example command to run'
+Note 'Example commands to run'
+  MinesweeperGtk ''
   MinesweeperGtk 12 12
 )
 MinesweeperGtk_z_=: conew&'mineswpgtk'
@@ -121,10 +122,9 @@ NB. =========================================================
 
 create=: 3 : 0
   if. -.IFGTK do. gtkinit'' end.
-  y=. (0=#y){:: y ; 9 9
   newMinefield y
   IsEnd=: 0
-  newwindow 'Minesweeper'
+  newwindow 'Minesweeper GTK'
   consig window;'destroy';'window_destroy'
   box1=. gtk_vbox_new 0 0
   gtk_container_add window, box1
@@ -134,12 +134,12 @@ NB. menu bar
   gtk_box_pack_start box1, mb, 0 0 0
 NB. drawing area
   gtkda=: gtk_drawing_area_new''
-  gtk_widget_set_size_request gtkda,((#>{.Tiles)*y)
+  gtk_widget_set_size_request gtkda,((#>{.Tiles)*$Map)
   NB. GDK_LEAVE_NOTIFY_MASK,GDK_POINTER_MOTION_HINT_MASK
   events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POINTER_MOTION_MASK
   gtk_widget_add_events gtkda, OR events
-  consig3 gtkda;'expose_event';'gtkda_expose_event'
-  consig3 gtkda;'button_release_event';'gtkda_button_release_event'
+  consig3 gtkda;'expose_event';'gtkda_minefld_expose_event'
+  consig3 gtkda;'button_release_event';'gtkda_minefld_button_release_event'
   gtk_box_pack_start box1, gtkda, 1 1 0
 NB. status bar
   GtkSbar=: gtk_statusbar_new ''
@@ -195,26 +195,23 @@ NB. ---------------------------------------------------------
 NB. gtkwin      gtkda window
 NB. gtkpx       offscreen pixmap
 NB. gtkwh
-gtkda_expose_event=: 3 : 0
+gtkda_minefld_expose_event=: 3 : 0
   'widget event data'=. y
-NB. house keeping
+ NB. house keeping
   gtkwin=. getGtkWidgetWindow widget
   gtkdagc=. getdagc widget
   gtkwh=. 2 3{getGtkWidgetAllocation widget
   gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-NB. reset background
-NB.   gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0
-NB. the real 'paint'
-  gtkpx pixbuf_setpixels 0 0,((#>{.Tiles)*$Map), , ; ,.&.>/"1 Tiles showField IsEnd
-NB. render on drawable
-  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1
-NB. clean up
-  g_object_unref gtkpx
+  gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0                 NB. reset background
+  imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd                 NB. get matrix of argb values to paint
+  gtkpx pixbuf_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels   NB. the real 'paint'
+  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1         NB. render on drawable
+  g_object_unref gtkpx                                         NB. clean up
 )
 
 NB. drawing area mouse events
 NB. ---------------------------------------------------------
-gtkda_button_release_event=: 3 : 0
+gtkda_minefld_button_release_event=: 3 : 0
 'widget event data'=. y
   'button type x1 y1 w h state'=. get_button_event_data event
   if. +./ ($Map) < idx=. getTileIdx ":x1,y1 do. return. end.
@@ -294,11 +291,11 @@ menu_init=: 3 : 0
 )
 
 Menus=: fixNB 0 : 0
-gamenew,,_New Game,,,gamenew_activate
-gameoption,,_Options,,,gameoption_activate
+gamenew,gtk-new,_New Game,,,gamenew_activate
+gameoption,gtk-preferences,_Preferences,,,gameoption_activate
 gamequit,gtk-quit,_Quit,cQ,Quit the program,gamequit_activate
 
-help,,_Help,,Help,helphelp_activate
+help,gtk-help,_Help,,Help,helphelp_activate
 helpabout,gtk-about,_About,,Help About,helpabout_activate
 )
 
