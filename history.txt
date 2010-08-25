@@ -1,4 +1,7 @@
 games/minesweeper - change history
 
+== 1.0.1 ==
+ * fix: TilesG26 not set in uiconsole script.
+
 == 1.0.0 ==
  * Initial release
