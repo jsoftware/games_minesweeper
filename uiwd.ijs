@@ -7,14 +7,12 @@ Note 'Example commands to run'
 )
 MinesweeperWd_z_=: conew&'mineswpwd'
 
-AddonPath=. jpath '~addons/games/minesweeper/'
-
-require AddonPath,'minefield.ijs'
-NB. require 'games/minesweeper/minefield'
+require 'games/minesweeper/minefield'
 require 'media/platimg gl2'
 coclass 'mineswpwd'
 coinsert 'mineswp';'pplatimg';'jgl2'
 
+AddonPath=. jpath '~addons/games/minesweeper/'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 

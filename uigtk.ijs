@@ -154,14 +154,12 @@ cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-AddonPath=. jpath '~addons/games/minesweeper/'
-
-require AddonPath,'minefield.ijs'
-NB. require 'games/minesweeper/minefield'
+require 'games/minesweeper/minefield'
 require 'gui/gtk'
 coclass 'mineswpgtk'
 coinsert 'mineswp';'jgtk'
 
+AddonPath=. jpath '~addons/games/minesweeper/'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 
 NB. Methods
@@ -172,16 +170,16 @@ create=: 3 : 0
   newMinefield y
   IsEnd=: 0
 
-  newwindow 'Minesweeper GTK'
-  consig window;'destroy';'window_destroy'
-  box1=. gtk_vbox_new 0 0
-  gtk_container_add window, box1
+  newwindow 'Minesweeper GTK'                         NB. create new window with Title
+  consig window;'destroy';'window_destroy'            NB. assign event handler for event
+  box1=. gtk_vbox_new 0 0                             NB. create vertical box container for widgets
+  gtk_container_add window, box1                      NB. Add the container to the window
 NB. tooltips group
-  menutooltips=: gtk_tooltips_new''
+  menutooltips=: gtk_tooltips_new''                   
 NB. menu bar
   menu_init''
   mb=. edit_menu''
-  gtk_box_pack_start box1, mb, 0 0 0
+  gtk_box_pack_start box1, mb, 0 0 0                  NB. pack menubar in the vertical box
 NB. drawing area
   gtkda=: gtk_drawing_area_new''
   gtk_widget_set_size_request gtkda,((#>{.Tiles)*$Map)
@@ -190,11 +188,11 @@ NB. drawing area
   gtk_widget_add_events gtkda, OR events
   consig3 gtkda;'expose_event';'gtkda_minefld_expose_event'
   consig3 gtkda;'button_release_event';'gtkda_minefld_button_release_event'
-  gtk_box_pack_start box1, gtkda, 1 1 0
+  gtk_box_pack_start box1, gtkda, 1 1 0               NB. pack drawing area in the vertical box
 NB. status bar
   GtkSbar=: gtk_statusbar_new ''
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'msg'
-  gtk_box_pack_start box1, GtkSbar, 0 0 0
+  gtk_box_pack_start box1, GtkSbar, 0 0 0             NB. pack statusbar in the vertical box
   windowfinish''
 
   msgtk_update''
@@ -247,7 +245,7 @@ NB. gtkpx       offscreen pixmap
 NB. gtkwh
 gtkda_minefld_expose_event=: 3 : 0
   'widget event data'=. y
- NB. house keeping
+  NB. house keeping
   gtkwin=. getGtkWidgetWindow widget
   gtkdagc=. getdagc widget
   gtkwh=. 2 3{getGtkWidgetAllocation widget
@@ -342,11 +340,11 @@ menu_init=: 3 : 0
 
 Menus=: fixNB 0 : 0
 gamenew,gtk-new,_New Game,,Start a new game,gamenew_activate
-gameoption,gtk-preferences,_Options,,,gameoption_activate
+gameoption,gtk-preferences,_Options,,Not implemented,gameoption_activate
 gamequit,gtk-quit,_Quit,cQ,Quit the program,gamequit_activate
 
-helphelp,gtk-help,_Instructions,,Help,helphelp_activate
-helpabout,gtk-about,_About,,Help About,helpabout_activate
+helphelp,gtk-help,_Instructions,,,helphelp_activate
+helpabout,gtk-about,_About,,,helpabout_activate
 )
 
 edit_menu=: 3 : 0

@@ -132,14 +132,12 @@ cocurrent 'base'
 NB. End Hacks
 NB. =========================================================
 
-require '~addons/games/minesweeper/minefield.ijs'
-NB. require 'games/minesweeper/minefield'  NB. use once published
+require 'games/minesweeper/minefield'
 require 'gui/gtk'
 coclass 'mineswpgtkglade'
 coinsert 'mineswp';'jgtk'
 
-NB. kludge for adding ctrl-q keyboard accelerator
-ACCELBUG=: IFWIN*.-.IF64
+ACCELBUG=: IFWIN*.-.IF64       NB. kludge for adding ctrl-q keyboard accelerator
 
 AddonPath=: jpath '~addons/games/minesweeper/'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'

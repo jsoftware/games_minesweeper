@@ -1,4 +1,6 @@
 NB. Console user interface for Minesweeper game
+NB. Should work in all J front ends.
+NB. Viewing the Minefield using viewmat currently only works on J6
 
 Note 'Example commands to run'
   fld=: MinesweeperCon ''
@@ -6,17 +8,15 @@ Note 'Example commands to run'
 )
 MinesweeperCon_z_=: conew&'mineswpcon'
 
-AddonPath=. jpath '~addons/games/minesweeper/'
-
-load AddonPath,'minefield.ijs'
-NB. require 'games/minesweeper/minefield'
-require 'media/platimg viewmat'
+require 'games/minesweeper/minefield'
+NB. require 'media/platimg viewmat'                                 NB. can uncomment on J6
 coclass 'mineswpcon'
 coinsert 'mineswp'
 
-TextDisplay=: 1     NB. set to zero to display minefield using viewmat
-TilesG26=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+AddonPath=. jpath '~addons/games/minesweeper/'
+NB.TilesG26=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'  NB. can uncomment on J6
 TilesA=: ' 12345678**.?'
+TextDisplay=: 1                          NB. set to zero to display minefield using viewmat
 
 NB. Methods
 NB. =========================================================
