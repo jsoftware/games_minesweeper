@@ -234,7 +234,7 @@ NB. ---------------------------------------------------------
 on_gtkda_minefld_button_release_event=: 3 : 0
   'widget event data'=. y
   'button type x1 y1 w h state'=. get_button_event_data event
-  if. +./ ($Map) < idx=. getTileIdx ":x1,y1 do. return. end.
+  if. +./ IsEnd , ($Map)<idx=. getTileIdx ":x1,y1 do. return. end.
   select. button
     case. 1 do. msgtk_update@clearTiles idx
     case. 3 do. msgtk_update@markTiles idx

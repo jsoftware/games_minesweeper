@@ -93,12 +93,12 @@ mswd_isifld_paint=: 3 : 0
 )
 
 mswd_isifld_mblup=: 3 : 0
-  if. +./ ($Map) < idx=. getTileIdx sysdata do. return. end.
+  if. +./ IsEnd , ($Map)<idx=. getTileIdx sysdata do. return. end.
   mswd_update@clearTiles idx
 )
 
 mswd_isifld_mbrup=: 3 : 0
-  if. +./ ($Map) < idx=. getTileIdx sysdata do. return. end.
+  if. +./ IsEnd , ($Map)<idx=. getTileIdx sysdata do. return. end.
   mswd_update@markTiles idx
 )
 
