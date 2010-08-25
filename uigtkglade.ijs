@@ -138,6 +138,9 @@ require 'gui/gtk'
 coclass 'mineswpgtkglade'
 coinsert 'mineswp';'jgtk'
 
+NB. kludge for adding ctrl-q keyboard accelerator
+ACCELBUG=: IFWIN*.-.IF64
+
 AddonPath=: jpath '~addons/games/minesweeper/'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 
@@ -156,6 +159,12 @@ create=: 3 : 0
   gtk_widget_set_size_request gtkda,((#>{.Tiles)*$Map)               NB. size gtkda_minefld appropriately
   GtkSbar=: gtk_builder_get_object GtkBuilder;'sbar'                 NB. get id of statusbar widget
   SbarContxt=: gtk_statusbar_get_context_id GtkSbar;'status updates' NB. get context id to use for all msgs
+  if. ACCELBUG do.
+    accel_group=: gtk_accel_group_new''
+    gtk_window_add_accel_group window,accel_group
+    gamequit=. gtk_builder_get_object GtkBuilder;'gamequit'
+    create_menu_accel window;gamequit;'gamequit';(a.i.'q');GDK_CONTROL_MASK
+  end.
   msgtk_update''
   gtk_widget_show window
   if. -.IFGTK do. gtk_main'' end.
