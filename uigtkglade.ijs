@@ -38,6 +38,16 @@ gladeconsig GLADESIGNALS
 builder,window
 )
 
+NB. gtk_gettypes fix not yet in released gui/gtk
+gtk_gettypes=: 3 : 0
+if. IFWIN do. EMPTY return. end.
+t=. [;._2 GTKTYPES
+t=. ((>libgtk),' ') ,"1 t ,"1 ' >',"1 (2*IFUNIX) }. ' + x'
+t (15!:0 ::0:)"1 ''   NB. some types absent in older gtk version
+EMPTY
+)
+gtk_gettypes ''       NB. redefine GTKTYPES
+
 NB. gtk functions not yet declared in released gui/gtk
 libgtk cddef each <;._2 [ 0 : 0
 gtk_statusbar_get_context_id > x x *c
@@ -281,3 +291,8 @@ Authors: Ric Sherlock, Bill Lam
 
 Uses J7 graphics/gtk/glade for GUI
 )
+
+NB. Auto-run UI
+NB. =========================================================
+cocurrent 'base'
+MinesweeperGtkGlade ''

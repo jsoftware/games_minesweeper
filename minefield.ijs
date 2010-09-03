@@ -1,6 +1,11 @@
 NB. Generic minesweeper engine
 NB. Used by the various User Interface (ui*.ijs) scripts
 
+NB. When loaded the script should randomly set the random seed otherwise the same 
+NB. sequence of minefields will result in each fresh J session.
+NB.! guids should be available in next release of base library
+NB.! ([ 9!:1) _2 (3!:4) , guids 1     NB. set random initial random seed
+
 coclass 'mineswp'
 
 newMinefield=: 3 : 0

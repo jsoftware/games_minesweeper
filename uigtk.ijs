@@ -370,3 +370,8 @@ help_menu=: 3 : 0
   con ccmenu 'helphelp'
   con ccmenu 'helpabout'
 )
+
+NB. Auto-run UI
+NB. =========================================================
+cocurrent 'base'
+MinesweeperGtk ''

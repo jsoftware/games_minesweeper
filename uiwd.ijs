@@ -130,3 +130,8 @@ Author: Ric Sherlock
 
 Uses J6 Window Driver for GUI
 )
+
+NB. Auto-run UI
+NB. =========================================================
+cocurrent 'base'
+MinesweeperWd ''

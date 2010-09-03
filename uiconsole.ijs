@@ -67,9 +67,7 @@ Object:
    Uncover (clear) all the tiles that are not mines.
 
 How to play:
- - start a game using the command:
-      fld=: MineSweeperCon <num columns> <num rows>
- - the top, left tile is: 1 1
+ - the left, top tile is: 1 1
  - clear an uncleared tile (.) using the command:
       clear__fld <column index> <row index>
  - mark and uncleared tile (?) as a suspected mine using the command:
@@ -80,4 +78,11 @@ How to play:
  - if you uncover all tiles that are not mines the game ends (you win).
  - quit a game before winning or losing using the command:
       quit__fld ''
+ - start a new game using the command:
+      fld=: MineSweeperCon <num columns> <num rows>
 )
+
+NB. Auto-run UI
+NB. =========================================================
+cocurrent 'base'
+fld=: MinesweeperCon ''
