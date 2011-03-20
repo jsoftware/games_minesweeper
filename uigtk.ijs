@@ -27,8 +27,6 @@ create=: 3 : 0
   consig window;'destroy';'window_destroy'            NB. assign event handler for event
   box1=. gtk_vbox_new 0 0                             NB. create vertical box container for widgets
   gtk_container_add window, box1                      NB. Add the container to the window
-NB. tooltips group
-  menutooltips=: gtk_tooltips_new''                   
 NB. menu bar
   menu_init''
   mb=. edit_menu''
@@ -39,7 +37,11 @@ NB. drawing area
   NB. GDK_LEAVE_NOTIFY_MASK,GDK_POINTER_MOTION_HINT_MASK
   events=. GDK_EXPOSURE_MASK,GDK_BUTTON_PRESS_MASK,GDK_BUTTON_RELEASE_MASK,GDK_POINTER_MOTION_MASK
   gtk_widget_add_events gtkda, OR events
-  consig3 gtkda;'expose_event';'gtkda_minefld_expose_event'
+  if. 3=GTKVER_j_ do.
+    consig3 gtkda;'draw';'gtkda_minefld_draw'
+  else.
+    consig3 gtkda;'expose_event';'gtkda_minefld_expose_event'
+  end.
   consig3 gtkda;'button_release_event';'gtkda_minefld_button_release_event'
   gtk_box_pack_start box1, gtkda, 1 1 0               NB. pack drawing area in the vertical box
 NB. status bar
@@ -85,7 +87,6 @@ NB. =========================================================
 window_delete=: 0:
 
 window_destroy=: 3 : 0
-  g_object_ref_sink menutooltips
   if. -.IFGTK do. gtk_main_quit '' end.
   destroy ''
   0
@@ -94,20 +95,22 @@ window_destroy=: 3 : 0
 NB. drawing area expose events
 NB. ---------------------------------------------------------
 NB. gtkwin      gtkda window
-NB. gtkpx       offscreen pixmap
 NB. gtkwh
-gtkda_minefld_expose_event=: 3 : 0
+gtkda_minefld_draw=: gtkda_minefld_expose_event=: 3 : 0
   'widget event data'=. y
   NB. house keeping
-  gtkwin=. getGtkWidgetWindow widget
-  gtkdagc=. getdagc widget
   gtkwh=. 2 3{getGtkWidgetAllocation widget
-  gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-  gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0                 NB. reset background
-  imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd                 NB. get matrix of argb values to paint
-  gtkpx pixbuf_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels   NB. the real 'paint'
-  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1         NB. render on drawable
-  g_object_unref gtkpx                                         NB. clean up
+  if. 3=GTKVER_j_ do.
+    cr=. event
+    cr pixbufcr_setpixels 0 0,gtkwh,(*/gtkwh)#0                NB. reset background
+    imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd               NB. get matrix of argb values to paint
+    cr pixbufcr_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
+  else.
+    gtkwin=. getGtkWidgetWindow widget
+    gtkwin pixbufwin_setpixels 0 0,gtkwh,(*/gtkwh)#0                NB. reset background
+    imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd                    NB. get matrix of argb values to paint
+    gtkwin pixbufwin_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
+  end.
 )
 
 NB. drawing area mouse events

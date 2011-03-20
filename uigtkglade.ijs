@@ -25,6 +25,7 @@ create=: 3 : 0
   newMinefield y
   IsEnd=: 0
   newwindow 'Minesweeper'
+NB. glade not yet work in gtk3, draw event not handled
   'GtkBuilder window'=: 'window' gtkglade AddonPath,'uigtk.glade'
   assert. 0~:GtkBuilder
   assert. 0~:window
@@ -85,20 +86,22 @@ on_window_destroy=: 3 : 0
 NB. drawing area expose events
 NB. ---------------------------------------------------------
 NB. gtkwin      gtkda window
-NB. gtkpx       offscreen pixmap
 NB. gtkwh
-on_gtkda_minefld_expose_event=: 3 : 0
+on_gtkda_minefld_draw=: on_gtkda_minefld_expose_event=: 3 : 0
   'widget event data'=. y
   NB. house keeping
-  gtkwin=. getGtkWidgetWindow widget
-  gtkdagc=. getdagc widget
   gtkwh=. 2 3{getGtkWidgetAllocation widget
-  gtkpx=. gdk_pixmap_new gtkwin,gtkwh,_1
-  gtkpx pixbuf_setpixels 0 0,gtkwh,(*/gtkwh)#0                 NB. reset background
-  imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd                 NB. get matrix of argb values to paint
-  gtkpx pixbuf_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels   NB. the real 'paint'
-  gdk_draw_drawable gtkwin,gtkdagc,gtkpx,0 0 0 0 _1 _1         NB. render on drawable
-  g_object_unref gtkpx                                         NB. clean up
+  if. 3=GTKVER_j_ do.
+    cr=. event
+    cr pixbufcr_setpixels 0 0,gtkwh,(*/gtkwh)#0                NB. reset background
+    imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd               NB. get matrix of argb values to paint
+    cr pixbufcr_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
+  else.
+    gtkwin=. getGtkWidgetWindow widget
+    gtkwin pixbufwin_setpixels 0 0,gtkwh,(*/gtkwh)#0                NB. reset background
+    imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd                    NB. get matrix of argb values to paint
+    gtkwin pixbufwin_setpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
+  end.
 )
 
 
