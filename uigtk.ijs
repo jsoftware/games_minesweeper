@@ -7,8 +7,8 @@ Note 'Example commands to run'
 )
 MinesweeperGtk_z_=: conew&'mineswpgtk'
 
-require 'games/minesweeper/minefield'
 require 'gui/gtk'
+require 'games/minesweeper/minefield'
 coclass 'mineswpgtk'
 coinsert 'mineswp';'jgtk'
 

@@ -7,8 +7,8 @@ Note 'Example commands to run'
 )
 MinesweeperWd_z_=: conew&'mineswpwd'
 
-require 'games/minesweeper/minefield'
 require 'media/platimg gl2'
+require 'games/minesweeper/minefield'
 coclass 'mineswpwd'
 coinsert 'mineswp';'pplatimg';'jgl2'
 

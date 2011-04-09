@@ -8,8 +8,8 @@ Note 'Example commands to run'
 )
 MinesweeperCon_z_=: conew&'mineswpcon'
 
-require 'games/minesweeper/minefield'
 NB. require 'media/platimg viewmat'                                 NB. can uncomment on J6
+require 'games/minesweeper/minefield'
 coclass 'mineswpcon'
 coinsert 'mineswp'
 
