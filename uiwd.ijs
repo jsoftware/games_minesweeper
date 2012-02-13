@@ -7,14 +7,28 @@ Note 'Example commands to run'
 )
 MinesweeperWd_z_=: conew&'mineswpwd'
 
-require 'media/platimg gl2'
-require 'games/minesweeper/minefield'
-coclass 'mineswpwd'
-coinsert 'mineswp';'pplatimg';'jgl2'
+3 : 0''
+  if. IFJ6 do.
+    require 'media/platimg gl2'
+    require 'games/minesweeper/minefield'
+    coclass 'mineswpwd'
+    coinsert 'mineswp';'pplatimg';'jgl2'
 
-AddonPath=. jpath '~addons/games/minesweeper/'
+    AddonPath=. jpath '~addons/games/minesweeper/'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
-Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+    Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+  else.
+    require 'gui/gtkwd'
+    require 'games/minesweeper/minefield'
+    coclass 'mineswpwd'
+    coinsert 'mineswp';'jgl2'
+
+    AddonPath=. jpath '~addons/games/minesweeper/'
+NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles18.png'
+    Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles26.png'
+  end.
+  ''
+)
 
 NB. Form definition
 MSWD=: 0 : 0
@@ -87,7 +101,12 @@ mswd_close=: destroy
 mswd_cancel=: destroy
 
 mswd_isifld_paint=: 3 : 0
-  'isifld' glimgrgb ; ,.&.>/"1 Tiles showField IsEnd
+  if. IFJ6 do.
+    'isifld' glimgrgb ; ,.&.>/"1 Tiles showField IsEnd
+  else.
+    imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd               NB. get matrix of argb values to paint
+    glpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
+  end.
 )
 
 mswd_isifld_mblup=: 3 : 0
