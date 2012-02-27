@@ -18,7 +18,7 @@ MinesweeperWd_z_=: conew&'mineswpwd'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
     Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
   else.
-    require 'gui/gtkwd'
+    require 'gtkwd'
     require 'games/minesweeper/minefield'
     coclass 'mineswpwd'
     coinsert 'mineswp';'jgl2'
