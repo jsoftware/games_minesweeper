@@ -59,6 +59,7 @@ create=: 3 : 0
   wd 'sbarset status 80 "',msg,'"'
   mswd_update@resizeFrm ''
   wd 'pshow'
+  wdloop^:(-.IFJ6)''
 )
 
 destroy=: 3 : 0
