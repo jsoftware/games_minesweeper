@@ -5,7 +5,11 @@ Note 'Example commands to run'
   MinesweeperWd ''
   MinesweeperWd 12 12
 )
-MinesweeperWd_z_=: conew&'mineswpwd'
+MinesweeperWd_z_=: 3 : 0
+a=. conew 'mineswpwd'
+BSIZE__a=: y
+create__a`start_droidwd__a@.('Android'-:UNAME) a
+)
 
 3 : 0''
   if. IFJ6 do.
@@ -18,14 +22,22 @@ MinesweeperWd_z_=: conew&'mineswpwd'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
     Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
   else.
-    require 'gtkwd'
+    require 'droidwd gtkwd'
     require 'games/minesweeper/minefield'
     coclass 'mineswpwd'
-    coinsert 'mineswp';'jgl2'
+    coinsert 'mineswp jgl2 wdbase'
+    droidwd_run=: create
 
     AddonPath=. jpath '~addons/games/minesweeper/'
-NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles18.png'
-    Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles26.png'
+    if. 'Android'-:UNAME do.
+      mswd_isifld_mbldbl=: mswd_isifld_mbrup  NB. android does not have right click
+
+NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles18.png'
+      Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles26.png'
+    else.
+NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles18.png'
+      Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles26.png'
+    end.
   end.
   ''
 )
@@ -53,6 +65,7 @@ NB. Methods
 NB. =========================================================
 
 create=: 3 : 0
+  y=. BSIZE
   wd MSWD
   newMinefield y
   'isend msg'=. eval''
@@ -74,7 +87,7 @@ mswd_update=: 3 : 0
   IsEnd=: isend
   wd 'sbarset status -1 *',msg
   if. isend do. 
-    wdinfo 'Game Over';msg 
+    sminfo 'Game Over';msg 
     msg=. ('K'={.msg) {:: 'won';'lost'
     wd 'sbarset status -1 * You ',msg,'! Try again?'
   end.
@@ -121,11 +134,11 @@ mswd_isifld_mbrup=: 3 : 0
 )
 
 mswd_about_button=: 3 : 0
-  wdinfo 'About Minesweeper';About
+  sminfo 'About Minesweeper';About
 )
 
 mswd_help_button=: 3 : 0
-  wdinfo 'Minesweeper Instructions';Instructions
+  sminfo 'Minesweeper Instructions';Instructions
 )
 
 NB. Text Nouns
@@ -137,7 +150,7 @@ Object:
 
 How to play:
  - click on a tile to clear it
- - right-click on a tile to mark it as a suspected mine
+ - right-click/long-click on a tile to mark it as a suspected mine
  - if you uncover a number, that is the number of mines adjacent 
     to the tile
  - if you uncover a mine the game ends (you lose)
@@ -148,10 +161,10 @@ About=: 0 : 0
 Minesweeper Game
 Author: Ric Sherlock
 
-Uses J6 Window Driver for GUI
+Uses Window Driver (Emulator) for GUI
 )
 
 NB. Auto-run UI
 NB. =========================================================
 cocurrent 'base'
-MinesweeperWd ''
+MinesweeperWd''

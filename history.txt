@@ -1,5 +1,8 @@
 games/minesweeper - change history
 
+== 1.0.10 ==
+ * add: support droidwd
+
 == 1.0.5/9 ==
  * add: support gtkwd
 
