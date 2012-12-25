@@ -1,5 +1,8 @@
 games/minesweeper - change history
 
+== 1.0.11 ==
+ * chg: cover verb for wd query cmds
+
 == 1.0.10 ==
  * add: support droidwd
 

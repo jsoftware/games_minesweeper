@@ -97,7 +97,7 @@ mswd_update=: 3 : 0
 
 resizeFrm=: 3 : 0
   isisz=. (#>{.Tiles)*$Map
-  frmsz=. ((IFJ6{::0 40;21 81) + isisz) ,~ 2{. 0". wd 'qformx'
+  frmsz=. ((IFJ6{::0 40;21 81) + isisz) ,~ 2{. wdqformx''
   wd 'pmovex ',": frmsz
 )
 
