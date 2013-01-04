@@ -36,8 +36,8 @@ NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles18.png'
       Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles26.png'
     elseif. IFQT do.
 
-NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles18.png'
-      Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles26.png'
+NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jqtide_ AddonPath,'tiles18.png'
+      Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jqtide_ AddonPath,'tiles26.png'
     elseif. do.
 NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles18.png'
       Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles26.png'
