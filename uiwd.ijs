@@ -124,6 +124,7 @@ mswd_isifld_paint=: 3 : 0
   else.
     imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd               NB. get matrix of argb values to paint
     glpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
+    glpaint^:IFQT''
   end.
 )
 
