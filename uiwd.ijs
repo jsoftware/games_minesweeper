@@ -101,7 +101,7 @@ mswd_update=: 3 : 0
 
 resizeFrm=: 3 : 0
   isisz=. (#>{.Tiles)*$Map
-  frmsz=. ((IFJ6{::0 40;21 81) + isisz) ,~ 2{. wdqformx''
+  frmsz=. ((IFJ6{::0 40;21 81) + isisz + IFQT*23 6) ,~ 2{. wdqformx''
   wd 'pmovex ',": frmsz
 )
 
@@ -124,7 +124,7 @@ mswd_isifld_paint=: 3 : 0
   else.
     imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd               NB. get matrix of argb values to paint
     glpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
-    glpaint^:IFQT''
+    glpaint''
   end.
 )
 
