@@ -30,6 +30,7 @@ NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
 
     AddonPath=. jpath '~addons/games/minesweeper/'
     if. IFQT do.
+      mswd_isifld_mbldbl=: mswd_isifld_mbrup  NB. android does not have right click
 
 NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jqtide_ AddonPath,'tiles18.png'
       Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jqtide_ AddonPath,'tiles26.png'
