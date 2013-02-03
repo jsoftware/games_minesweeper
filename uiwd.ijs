@@ -12,16 +12,6 @@ create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) a
 )
 
 3 : 0''
-  if. IFJ6 do.
-    require 'media/platimg gl2'
-    require 'games/minesweeper/minefield'
-    coclass 'mineswpwd'
-    coinsert 'mineswp';'pplatimg';'jgl2'
-
-    AddonPath=. jpath '~addons/games/minesweeper/'
-NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
-    Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
-  else.
     require 'droidwd gtkwd'
     require 'games/minesweeper/minefield'
     coclass 'mineswpwd'
@@ -43,7 +33,6 @@ NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles18.png'
 NB.   Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles18.png'
       Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jgtk_ AddonPath,'tiles26.png'
     end.
-  end.
   ''
 )
 
@@ -77,7 +66,7 @@ create=: 3 : 0
   wd 'sbarset status 80 "',msg,'"'
   mswd_update@resizeFrm ''
   wd 'pshow'
-  evtloop^:(-.IFJ6)''
+  evtloop''
 )
 
 destroy=: 3 : 0
@@ -102,7 +91,7 @@ mswd_update=: 3 : 0
 
 resizeFrm=: 3 : 0
   isisz=. (#>{.Tiles)*$Map
-  frmsz=. ((IFJ6{::0 40;21 81) + isisz + IFQT*23 6) ,~ 2{. wdqformx''
+  frmsz=. (0 40 + isisz + IFQT*23 6) ,~ 2{. wdqformx''
   wd 'pmovex ',": frmsz
 )
 
@@ -120,13 +109,9 @@ mswd_close=: destroy
 mswd_cancel=: destroy
 
 mswd_isifld_paint=: 3 : 0
-  if. IFJ6 do.
-    'isifld' glimgrgb ; ,.&.>/"1 Tiles showField IsEnd
-  else.
     imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd               NB. get matrix of argb values to paint
     glpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real 'paint'
     glpaint''
-  end.
 )
 
 mswd_isifld_mblup=: 3 : 0
