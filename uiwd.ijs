@@ -12,7 +12,8 @@ create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) a
 )
 
 3 : 0''
-    require 'droidwd gtkwd'
+    require 'droidwd'
+    require^:(-.IFJ6) ::0: 'gtkwd'
     require 'games/minesweeper/minefield'
     coclass 'mineswpwd'
     coinsert 'mineswp jgl2 wdbase'
