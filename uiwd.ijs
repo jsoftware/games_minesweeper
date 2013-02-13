@@ -65,8 +65,8 @@ create=: 3 : 0
   newMinefield y
   'isend msg'=. eval''
   wd 'sbarset status 80 "',msg,'"'
-  mswd_update@resizeFrm ''
   wd 'pshow'
+  mswd_update@resizeFrm ''
   evtloop''
 )
 

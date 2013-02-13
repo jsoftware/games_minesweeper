@@ -1,6 +1,6 @@
 games/minesweeper - change history
 
-== 1.0.17/18 ==
+== 1.0.17/19 ==
  * chg: j801
 
 == 1.0.12/16 ==
