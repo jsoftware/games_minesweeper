@@ -67,6 +67,7 @@ create=: 3 : 0
   wd 'sbarset status 80 "',msg,'"'
   wd 'pshow'
   mswd_update@resizeFrm ''
+  glpaint''  NB. android bug
   evtloop''
 )
 
