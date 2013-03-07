@@ -1,5 +1,9 @@
 games/minesweeper - change history
 
+== 1.0.23 ==
+ * chg: remove support for gtk
+ * chg: add support for qt status bar
+
 == 1.0.17/21 ==
  * chg: j801
 
