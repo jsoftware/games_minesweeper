@@ -37,19 +37,19 @@ NB. Form definition
 MSWD=: 0 : 0
 pc mswd;pn "Minesweeper";
 menupop "Game";
-menu new "&New Game" "" "" "";
-menu options "&Options" "" "" "";
+menu new "&New Game";
+menu options "&Options";
 menusep;
-menu exit "&Quit" "" "" "";
+menu exit "&Quit";
 menupopz;
 menupop "Help";
-menu help "&Instructions" "" "" "";
-menu about "&About" "" "" "";
+menu help "&Instructions";
+menu about "&About";
 menupopz;
 
-wh 118 118; cc isifld isigraph;
+wh 234 234; cc isifld isigraph;
 set isifld stretch 1;
-wh 118 14; cc sbar statusbar;
+wh 234 14; cc sbar statusbar;
 set sbar stretch 0;
 rem form end;
 )
@@ -89,12 +89,12 @@ mswd_update=: 3 : 0
 )
 
 resizeFrm=: 3 : 0
-  isisz=. (#>{.Tiles)*$Map
-  frmsz=. (0 40 + isisz + 23 6) ,~ 2{. wdqformx''
+  isisz=. ($>{.Tiles)*$Map
+  frmsz=. (isisz + 20 46 + IFWIN * 0 20) ,~ 2{. wdqformx''
   wd 'pmovex ',": frmsz
 )
 
-getTileIdx=: [: >:@:<. (#>{.Tiles) %~ 2 {. 0&".
+getTileIdx=: [: >:@:<. ($>{.Tiles) %~ 2 {. 0&".
 
 NB. Event Handlers
 NB. =========================================================
@@ -103,13 +103,17 @@ mswd_new_button=: 3 : 0
   mswd_startnew $Map
 )
 
+mswd_options_button=: 3 : 0
+  sminfo 'Info';'Not yet implemented.'
+)
+
 mswd_exit_button=: destroy
 mswd_close=: destroy
 mswd_cancel=: destroy
 
 mswd_isifld_paint=: 3 : 0
   imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd  NB. get matrix of argb values to paint
-  glpixels 0 0,((#>{.Tiles)*$Map), , imgpixels  NB. the real "paint"
+  glpixels 0 0,(($>{.Tiles)*$Map), , imgpixels  NB. the real "paint"
   glpaint''
 )
 
