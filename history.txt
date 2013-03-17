@@ -1,5 +1,8 @@
 games/minesweeper - change history
 
+== 1.0.24 ==
+ * chg: Improve sizing of minefield on form
+
 == 1.0.23 ==
  * chg: remove support for gtk
  * chg: add support for qt status bar
