@@ -1,6 +1,6 @@
 games/minesweeper - change history
 
-== 1.0.24 ==
+== 1.0.24/25 ==
  * chg: Improve sizing of minefield on form
 
 == 1.0.23 ==
