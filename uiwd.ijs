@@ -89,14 +89,23 @@ mswd_startnew=: mswd_update@resizeFrm@newMinefield
 mswd_update=: 3 : 0
   'isend msg'=. eval ''
   IsEnd=: isend
-  wd 'set sbar show "',msg,'"'
-  if. isend do. 
-    sminfo 'Game Over';msg 
-    msg=. ('K'={.msg) {:: 'won';'lost'
-    wd 'set sbar show " You ',msg,'! Try again?"'
+  if. isend do.
+    mswd_gameover msg
+  else.
+    wd 'set sbar show "',msg,'"'
+    wd 'set isifld invalid'
+    empty''
   end.
-  wd 'set isifld invalid'
-  empty''
+)
+
+mswd_gameover=: 3 : 0
+  result=. ('K'={.y) {:: 'won';'lost'
+  msg=. y,LF,LF,' You ',result,'! Try again?'
+  playagain=. wd 'mb query mb_yes mb_no "Game Over" "',msg,'"'
+  select. playagain
+    case. 'yes' do. mswd_startnew $Map
+    case. 'no'  do. destroy'' 
+  end.
 )
 
 resizeFrm=: 3 : 0
