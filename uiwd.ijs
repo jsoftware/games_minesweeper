@@ -7,42 +7,41 @@ Note 'Example commands to run'
 
 MinesweeperWd_z_=: 3 : 0
   a=. conew 'mineswpwd'
-  BSIZE__a=: y
-  create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) a
+  create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) y
 )
 
+require 'gl2 droidwd'
+require 'games/minesweeper/minefield'
+coclass 'mineswpwd'
+coinsert 'mineswp jgl2'
+droidwd_run=: create
+
 3 : 0''
-  require 'gl2 droidwd'
-  require 'games/minesweeper/minefield'
-  coclass 'mineswpwd'
-  coinsert 'mineswp jgl2 wdbase'
-  droidwd_run=: create
-
-  AddonPath=. jpath '~addons/games/minesweeper/'
   if. IFQT do.
-    mswd_isifld_mbldbl=: mswd_isifld_mbrup  NB. android does not have right click
-
-NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jqtide_ AddonPath,'tiles18.png'
-    Tiles=: ,((2 2 $ #) <;._3 ]) readimg_jqtide_ AddonPath,'tiles26.png'
+    readimg=: readimg_jqtide_
   elseif. 'Android'-:UNAME do.
-    mswd_isifld_mbldbl=: mswd_isifld_mbrup  NB. android does not have right click
-
-NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles18.png'
-    Tiles=: ,((2 2 $ #) <;._3 ]) readimg_ja_ AddonPath,'tiles26.png'
+    readimg=: readimg_ja_
   end.
   empty''
 )
 
-NB. Form definition
+AddonPath=. jpath '~addons/games/minesweeper/'
+NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
+Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
+MFSizes=: ;:'small medium nonsquare large'
+MFSize_vals=: 9 9, 12 12, 15 12,: 20 20
+
+NB. Form definitions
+NB. =========================================================
 MSWD=: 0 : 0
 pc mswd;pn "Minesweeper";
-menupop "Game";
+menupop "&Game";
 menu new "&New Game";
 menu options "&Options";
 menusep;
 menu exit "&Quit";
 menupopz;
-menupop "Help";
+menupop "&Help";
 menu help "&Instructions";
 menu about "&About";
 menupopz;
@@ -55,11 +54,26 @@ pas 0 0 0 0; pcenter;
 rem form end;
 )
 
+MSOPTS=: 0 : 0
+pc msopts dialog owner closeok escclose closebutton;pn "Minesweeper Options";
+bin h;
+groupbox "Minefield size";
+cc small radiobutton;
+cc medium radiobutton group;
+cc nonsquare radiobutton group;
+cc large radiobutton group;
+groupboxend;
+bin vs1;
+cc apply button; cn "Apply";
+bin zz;
+pas 0 0;pcenter;
+)
+
+
 NB. Methods
 NB. =========================================================
 
 create=: 3 : 0
-  y=. BSIZE
   wd MSWD
   mswd_startnew y
   wd 'pshow'
@@ -87,6 +101,7 @@ mswd_update=: 3 : 0
 
 resizeFrm=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
+  wd 'psel mswd'
   frmsz=. (isisz + 0 20) ,~ 2{. wdqform''
   wd 'set isifld wh ',": isisz
   wd 'pmove ',": frmsz
@@ -102,7 +117,16 @@ mswd_new_button=: 3 : 0
 )
 
 mswd_options_button=: 3 : 0
-  sminfo 'Info';'Not yet implemented.'
+  wd MSOPTS
+  sz=. ;(MFSizes,<'small') {~ MFSize_vals i. $Map
+  wd 'set ',sz,' value 1'
+  wd 'pshow'
+)
+
+msopts_apply_button=: 3 : 0
+  sz=. ,MFSize_vals #~ 0 ". ".&> MFSizes
+  wd 'pclose'
+  mswd_startnew sz
 )
 
 mswd_exit_button=: destroy
@@ -124,6 +148,8 @@ mswd_isifld_mbrup=: 3 : 0
   if. +./ IsEnd , ($Map)<idx=. getTileIdx sysdata do. return. end.
   mswd_update@markTiles idx
 )
+
+mswd_isifld_mbldbl=: mswd_isifld_mbrup  NB. android does not have right click
 
 mswd_about_button=: 3 : 0
   sminfo 'About Minesweeper';About

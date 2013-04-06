@@ -1,6 +1,10 @@
 games/minesweeper - change history
 
-== 1.0.24/25 ==
+== 1.0.27 ==
+ * new: Add options dialog to change minefield size
+ * chg: Improve resizing of form to fit minefield
+
+== 1.0.24/26 ==
  * chg: Improve sizing of minefield on form
 
 == 1.0.23 ==
