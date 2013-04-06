@@ -102,7 +102,7 @@ mswd_update=: 3 : 0
 resizeFrm=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
   wd 'psel mswd'
-  frmsz=. (isisz + 0 20) ,~ 2{. wdqform''
+  frmsz=. (isisz + 0 20 + IFWIN * 0 20) ,~ 2{. wdqform''
   wd 'set isifld wh ',": isisz
   wd 'pmove ',": frmsz
 )
