@@ -7,8 +7,8 @@ Note 'Example commands to run'
 
 MinesweeperWd_z_=: 3 : 0
   a=. conew 'mineswpwd'
-BSIZE__a=: y
-create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) a
+  BSIZE__a=: y
+  create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) a
 )
 
 3 : 0''
@@ -49,8 +49,9 @@ menupopz;
 
 wh 234 234; cc isifld isigraph;
 set isifld stretch 1;
-wh 234 14; cc sbar statusbar;
+wh 234 20; cc sbar statusbar;
 set sbar stretch 0;
+pas 0 0 0 0; pcenter;
 rem form end;
 )
 
@@ -60,12 +61,8 @@ NB. =========================================================
 create=: 3 : 0
   y=. BSIZE
   wd MSWD
-  newMinefield y
-  'isend msg'=. eval''
-  wd 'set sbar show "',msg,'"'
+  mswd_startnew y
   wd 'pshow'
-  mswd_update@resizeFrm ''
-  evtloop''
 )
 
 destroy=: 3 : 0
@@ -73,7 +70,7 @@ destroy=: 3 : 0
   codestroy ''
 )
 
-mswd_startnew=: mswd_update@newMinefield
+mswd_startnew=: mswd_update@resizeFrm@newMinefield
 
 mswd_update=: 3 : 0
   'isend msg'=. eval ''
@@ -90,9 +87,9 @@ mswd_update=: 3 : 0
 
 resizeFrm=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
-  frmsz=. (isisz + 20 46 + IFWIN * 0 20) ,~ 2{. wdqform''
-NB.   wd 'pmove ',": frmsz
+  frmsz=. (isisz + 0 20) ,~ 2{. wdqform''
   wd 'set isifld wh ',": isisz
+  wd 'pmove ',": frmsz
 )
 
 getTileIdx=: [: >:@:<. ($>{.Tiles) %~ 2 {. 0&".
