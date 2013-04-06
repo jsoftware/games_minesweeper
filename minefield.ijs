@@ -17,6 +17,7 @@ coclass 'mineswp'
 
 newMinefield=: 3 : 0
   if. 0=#y do. y=. 9 9 end.
+  y=. |.y
   Marked=: Cleared=: y$0
   NMines=: <. */(0.01*10+?20),y            NB. 10..20% of tiles are mines
   mines=. (i. e. NMines ? */) y            NB. place mines
@@ -27,9 +28,9 @@ markTiles=: 3 : 0
   Marked=: (<"1 <:y) (-.@{)`[`]} Marked    NB. toggle marked state of cell(s)
 )
 
-clearTiles=: clearcell@:<:                      NB. decrement coords - J arrays are 0-based
+clearTiles=: clearcell@:<:                 NB. decrement coords - J arrays are 0-based
 
-clearcell=: verb define
+clearcell=: 3 : 0
   if. #y do.
     free=. (#~ (Cleared < 0 = Map) {~ <"1) y 
     Cleared=: 1 (<"1 y)} Cleared           NB. set cell(s) as cleared
@@ -41,12 +42,12 @@ clearcell=: verb define
 
 getNbrs=: [: ,/^:(3=#@$) +"1/&(<: 3 3#: i.9)
 
-eval=: verb define
+eval=: 3 : 0
   if. isend=. 9 e. Cleared #&, Map do.            NB. cleared mine(s)?
     msg=. 'KABOOM!!'
   elseif. isend=. *./ 9 = (-.Cleared) #&, Map do. NB. all cleared except mines?
     msg=. 'Minefield cleared.'
-  elseif. do.                                      NB. else...
+  elseif. do.                                     NB. else...
     msg=. (": +/, Marked>Cleared),' of ',(":NMines),' mines marked.'
   end.
   isend;msg

@@ -4,7 +4,7 @@ NB. Viewing the Minefield using viewmat currently only works on J6
 
 Note 'Example commands to run'
   fld=: MinesweeperCon ''
-  fld=: MinesweeperCon 6 6
+  fld=: MinesweeperCon 6 10     NB. 6 rows, 10 cols
 )
 MinesweeperCon_z_=: conew&'mineswpcon'
 
@@ -17,7 +17,7 @@ AddonPath=. jpath '~addons/games/minesweeper/'
 TilesG26=: ''                                                       NB. dummy variable
 NB.TilesG26=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'  NB. can uncomment on J6
 TilesA=: ' 12345678**.?'
-TextDisplay=: 1                          NB. set to zero to display minefield using viewmat
+TextDisplay=: 1                  NB. set to zero to display minefield using viewmat
 
 NB. Methods
 NB. =========================================================
@@ -45,8 +45,8 @@ mscon_update=: 3 : 0
   empty''
 )
 
-clear=: mscon_update@clearTiles
-mark=: mscon_update@markTiles
+clear=: mscon_update@clearTiles@|.
+mark=: mscon_update@markTiles@|.
 
 display=: 3 : 0
   if. TextDisplay do.
@@ -69,9 +69,9 @@ Object:
 How to play:
  - the left, top tile is: 1 1
  - clear an uncleared tile (.) using the command:
-      clear__fld <column index> <row index>
+      clear__fld <row index> <column index>
  - mark and uncleared tile (?) as a suspected mine using the command:
-      mark__fld <column index> <row index>
+      mark__fld <row index> <column index>
  - if you uncover a number, that is the number of mines adjacent 
    to the tile
  - if you uncover a mine (*) the game ends (you lose)
@@ -79,7 +79,7 @@ How to play:
  - quit a game before winning or losing using the command:
       quit__fld ''
  - start a new game using the command:
-      fld=: MineSweeperCon <num columns> <num rows>
+      fld=: MinesweeperCon <num rows> <num columns>
 )
 
 NB. Auto-run UI

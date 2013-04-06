@@ -1,8 +1,8 @@
-NB. wd GUI for Minesweeper game
+NB. Qt wd GUI for Minesweeper game
 
 Note 'Example commands to run'
   MinesweeperWd ''
-  MinesweeperWd 12 12
+  MinesweeperWd 10 15    NB. 10 rows, 15 cols
 )
 
 MinesweeperWd_z_=: 3 : 0
@@ -29,7 +29,7 @@ AddonPath=. jpath '~addons/games/minesweeper/'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 MFSizes=: ;:'small medium nonsquare large'
-MFSize_vals=: 9 9, 12 12, 15 12,: 20 20
+MFSize_vals=: 9 9, 12 12, 12 15,: 20 20
 
 NB. Form definitions
 NB. =========================================================
@@ -103,7 +103,7 @@ mswd_gameover=: 3 : 0
   msg=. y,LF,LF,' You ',result,'! Try again?'
   playagain=. wd 'mb query mb_yes mb_no "Game Over" "',msg,'"'
   select. playagain
-    case. 'yes' do. mswd_startnew $Map
+    case. 'yes' do. mswd_startnew |.$Map
     case. 'no'  do. destroy'' 
   end.
 )
@@ -122,7 +122,7 @@ NB. Event Handlers
 NB. =========================================================
 
 mswd_new_button=: 3 : 0
-  mswd_startnew $Map
+  mswd_startnew |.$Map
 )
 
 mswd_options_button=: 3 : 0

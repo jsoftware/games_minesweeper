@@ -7,12 +7,12 @@ Implentation of classic Minesweeper game.
 
 Designed as an example of how to implement equivalent user interfaces for different environments.
 User interfaces available for various J environments currently include:
-  * jconsole, jwd
+  * jconsole, jQt
 
 Authors: Ric Sherlock, Bill Lam and Raul Miller.
 )
 
-VERSION=: '1.0.28'
+VERSION=: '1.0.29'
 
 RELEASE=: 'j801'
 

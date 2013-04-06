@@ -1,5 +1,9 @@
 games/minesweeper - change history
 
+== 1.0.29 ==
+ * new: Add choice to start new game at game end
+ * chg: User now specifies tiles in row,col order
+
 == 1.0.27/8 ==
  * new: Add options dialog to change minefield size
  * chg: Improve resizing of form to fit minefield
