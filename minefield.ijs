@@ -19,7 +19,7 @@ newMinefield=: 3 : 0
   if. 0=#y do. y=. 9 9 end.
   y=. |.y
   Marked=: Cleared=: y$0
-  NMines=: <. */(0.01*10+?20),y            NB. 10..20% of tiles are mines
+  NMines=: <. */(0.01*10+?11),y            NB. 10..20% of tiles are mines
   mines=. (i. e. NMines ? */) y            NB. place mines
   Map=: (9*mines) >. y{. (1,:3 3) +/@,;.3 (-1+y){.mines
 )
