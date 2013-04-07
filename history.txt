@@ -1,5 +1,10 @@
 games/minesweeper - change history
 
+== 1.0.30 ==
+ * chg: User can't resize Form
+ * fix: target correct form when multiple instances
+ * fix: Correctly calculate 10-20% mines
+
 == 1.0.29 ==
  * new: Add choice to start new game at game end
  * chg: User now specifies tiles in row,col order

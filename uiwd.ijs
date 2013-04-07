@@ -34,7 +34,7 @@ MFSize_vals=: 9 9, 12 12, 12 15,: 20 20
 NB. Form definitions
 NB. =========================================================
 MSWD=: 0 : 0
-pc mswd;pn "Minesweeper";
+pc mswd nosize;pn "Minesweeper";
 menupop "&Game";
 menu new "&New Game";
 menu options "&Options";
@@ -75,8 +75,9 @@ NB. =========================================================
 
 create=: 3 : 0
   wd MSWD
-  mswd_startnew y
   wd 'pshow'
+  MainID=: wd 'qhwndp'
+  mswd_startnew y
 )
 
 destroy=: 3 : 0
@@ -104,16 +105,15 @@ mswd_gameover=: 3 : 0
   playagain=. wd 'mb query mb_yes mb_no "Game Over" "',msg,'"'
   select. playagain
     case. 'yes' do. mswd_startnew |.$Map
-    case. 'no'  do. destroy'' 
+    case. 'no'  do. destroy''
   end.
 )
 
 resizeFrm=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
-  wd 'psel mswd'
-  frmsz=. (isisz + 0 20 + IFWIN * 0 20) ,~ 2{. wdqform''
-  wd 'set isifld wh ',": isisz
-  wd 'pmove ',": frmsz
+  wd 'psel ', MainID
+  wd 'set isifld minwh ',": isisz
+  wd 'pmove _1 _1 1 1'
 )
 
 getTileIdx=: [: >:@:<. ($>{.Tiles) %~ 2 {. 0&".
@@ -127,7 +127,7 @@ mswd_new_button=: 3 : 0
 
 mswd_options_button=: 3 : 0
   wd MSOPTS
-  sz=. ;(MFSizes,<'small') {~ MFSize_vals i. $Map
+  sz=. ;(MFSizes,<'small') {~ MFSize_vals i. |.$Map
   wd 'set ',sz,' value 1'
   wd 'pshow'
 )
@@ -188,7 +188,7 @@ About=: 0 : 0
 Minesweeper Game
 Author: Ric Sherlock
 
-Uses Window Driver for GUI
+Uses Qt Window Driver for GUI
 )
 
 NB. Auto-run UI

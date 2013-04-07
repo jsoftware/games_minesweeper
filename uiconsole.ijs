@@ -8,7 +8,6 @@ Note 'Example commands to run'
 )
 MinesweeperCon_z_=: conew&'mineswpcon'
 
-NB. require 'media/platimg viewmat'                                 NB. can uncomment on J6
 require 'games/minesweeper/minefield'
 coclass 'mineswpcon'
 coinsert 'mineswp'
@@ -37,7 +36,7 @@ mscon_update=: 3 : 0
   smoutput msg
   tiles=. TextDisplay{:: TilesG26;TilesA
   display tiles showField isend
-  if. isend do. 
+  if. isend do.
     msg=. ('K'={.msg) {:: 'won';'lost'
     smoutput 'You ',msg,'! Try again?'
     destroy ''
@@ -63,7 +62,7 @@ NB. =========================================================
 
 Instructions=: 0 : 0
 === MineSweeper ===
-Object: 
+Object:
    Uncover (clear) all the tiles that are not mines.
 
 How to play:
@@ -72,7 +71,7 @@ How to play:
       clear__fld <row index> <column index>
  - mark and uncleared tile (?) as a suspected mine using the command:
       mark__fld <row index> <column index>
- - if you uncover a number, that is the number of mines adjacent 
+ - if you uncover a number, that is the number of mines adjacent
    to the tile
  - if you uncover a mine (*) the game ends (you lose)
  - if you uncover all tiles that are not mines the game ends (you win).
