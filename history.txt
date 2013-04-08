@@ -1,9 +1,10 @@
 games/minesweeper - change history
 
-== 1.0.30 ==
+== 1.0.30/31 ==
  * chg: User can't resize Form
  * fix: target correct form when multiple instances
  * fix: Correctly calculate 10-20% mines
+ * fix: Mac paint error
 
 == 1.0.29 ==
  * new: Add choice to start new game at game end

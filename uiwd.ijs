@@ -75,9 +75,10 @@ NB. =========================================================
 
 create=: 3 : 0
   wd MSWD
-  wd 'pshow'
-  MainID=: wd 'qhwndp'
+  NB. need unique handle for mswd window to handle multiple instances of class
+  MSWD_hwnd=: wd 'qhwndp'  NB. assign hwnd this for mswd in instance locale
   mswd_startnew y
+  wd 'pshow'
 )
 
 destroy=: 3 : 0
@@ -85,7 +86,7 @@ destroy=: 3 : 0
   codestroy ''
 )
 
-mswd_startnew=: mswd_update@resizeFrm@newMinefield
+mswd_startnew=: mswd_update@mswd_resize@newMinefield
 
 mswd_update=: 3 : 0
   'isend msg'=. eval ''
@@ -109,9 +110,9 @@ mswd_gameover=: 3 : 0
   end.
 )
 
-resizeFrm=: 3 : 0
+mswd_resize=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
-  wd 'psel ', MainID
+  wd 'psel ', MSWD_hwnd
   wd 'set isifld minwh ',": isisz
   wd 'pmove _1 _1 1 1'
 )
