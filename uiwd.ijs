@@ -7,7 +7,7 @@ Note 'Example commands to run'
 
 MinesweeperWd_z_=: 3 : 0
   a=. conew 'mineswpwd'
-  create__a`start_droidwd__a@.(('Android'-:UNAME)>IFQT) y
+  create__a`start_droidwd__a@.IFJCDROID y
 )
 
 require 'gl2 droidwd'
