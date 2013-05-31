@@ -46,9 +46,9 @@ menu help "&Instructions";
 menu about "&About";
 menupopz;
 
-wh 234 234; cc isifld isigraph;
+minwh 234 234; cc isifld isigraph;
 set isifld stretch 1;
-wh 234 20; cc sbar statusbar;
+minwh 234 20; cc sbar statusbar;
 set sbar stretch 0;
 pas 0 0 0 0; pcenter;
 rem form end;
