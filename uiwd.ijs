@@ -46,7 +46,7 @@ menu help "&Instructions";
 menu about "&About";
 menupopz;
 
-minwh 234 234; cc isifld isigraph;
+minwh 234 234; cc isifld isigraph flush;
 set isifld stretch 1;
 minwh 234 20; cc sbar statusbar;
 set sbar stretch 0;
