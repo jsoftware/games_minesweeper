@@ -1,7 +1,7 @@
 NB. build
 
 f=. 3 : 0
-(jpath '~addons/games/minesweeper/',y) fcopynew jpath '~Addons/games/minesweeper/',y
+(jpath '~addons/games/minesweeper/',y) (fcopynew ::0:) jpath '~Addons/games/minesweeper/',y
 )
 
 mkdir_j_ jpath '~addons/games/minesweeper'
