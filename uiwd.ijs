@@ -114,7 +114,7 @@ mswd_resize=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
   wd 'psel ', MSWD_hwnd
   wd 'set isifld minwh ',": isisz
-  wd 'pmove _1 _1 1 1'
+  wd^:(-.'Android'-:UNAME) 'pmove _1 _1 1 1'
 )
 
 getTileIdx=: [: >:@:<. ($>{.Tiles) %~ 2 {. 0&".
