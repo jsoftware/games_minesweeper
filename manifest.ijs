@@ -12,11 +12,15 @@ User interfaces available for various J environments currently include:
 Authors: Ric Sherlock, Bill Lam and Raul Miller.
 )
 
-VERSION=: '1.0.34'
+VERSION=: '1.0.35'
 
 RELEASE=: 'j801'
 
 PLATFORMS=: ''
+
+DEPENDS=: 0 : 0
+graphics/gl2
+)
 
 FILES=: 0 : 0
 history.txt
