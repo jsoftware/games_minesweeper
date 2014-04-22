@@ -173,14 +173,13 @@ NB. Text Nouns
 NB. =========================================================
 
 Instructions=: 0 : 0
-Object: 
+Object:
    Uncover (clear) all the tiles that are not mines.
 
 How to play:
  - click on a tile to clear it
  - right-click/long-click on a tile to mark it as a suspected mine
- - if you uncover a number, that is the number of mines adjacent 
-    to the tile
+ - if you uncover a number, that is the number of mines adjacent to the tile
  - if you uncover a mine the game ends (you lose)
  - if you uncover all tiles that are not mines the game ends (you win).
 )

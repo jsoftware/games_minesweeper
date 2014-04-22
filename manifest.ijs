@@ -3,7 +3,7 @@ NB. games/minesweeper manifest
 CAPTION=: 'Classic Minesweeper game'
 
 DESCRIPTION=: 0 : 0
-Implentation of classic Minesweeper game. 
+Implentation of classic Minesweeper game.
 
 Designed as an example of how to implement equivalent user interfaces for different environments.
 User interfaces available for various J environments currently include:
@@ -12,9 +12,9 @@ User interfaces available for various J environments currently include:
 Authors: Ric Sherlock, Bill Lam and Raul Miller.
 )
 
-VERSION=: '1.0.35'
+VERSION=: '1.0.36'
 
-RELEASE=: 'j801'
+RELEASE=: 'j802'
 
 PLATFORMS=: ''
 
