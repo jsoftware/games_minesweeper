@@ -16,7 +16,7 @@ VERSION=: '1.0.36'
 
 RELEASE=: 'j802'
 
-PLATFORMS=: 'linux win darwin android'
+PLATFORMS=: ''
 
 DEPENDS=: 0 : 0
 graphics/gl2
