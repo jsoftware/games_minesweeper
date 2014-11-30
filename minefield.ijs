@@ -1,7 +1,7 @@
 NB. Generic minesweeper engine
 NB. Used by the various User Interface (ui*.ijs) scripts
 
-NB. When loaded the script should randomly set the random seed otherwise 
+NB. When loaded the script should randomly set the random seed otherwise
 NB. the same sequence of minefields will result in each fresh J session.
 3 : 0 ''
  try.
@@ -32,7 +32,7 @@ clearTiles=: clearcell@:<:                 NB. decrement coords - J arrays are 0
 
 clearcell=: 3 : 0
   if. #y do.
-    free=. (#~ (Cleared < 0 = Map) {~ <"1) y 
+    free=. (#~ (Cleared < 0 = Map) {~ <"1) y
     Cleared=: 1 (<"1 y)} Cleared           NB. set cell(s) as cleared
     if. #free do.
       clearcell (#~ Cleared -.@{~ <"1) ~. (<:$Map) (<."1) 0 >. getNbrs free
