@@ -31,6 +31,16 @@ Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 MFSizes=: ;:'small medium nonsquare large'
 MFSize_vals=: 9 9, 12 12, 12 15,: 20 20
 
+NB. Android screen has high dpi
+3 : 0''
+  if. 'Android'-:UNAME do.
+    imgstretch=. (i.@[ <.@* #@] % [) { ]
+    imgresize=. ([: |: ([: {. [) imgstretch("0 _) [: ] [: |: ([: {: [) imgstretch("0 _) [: ] ])
+    Tiles=: ,((2 2 $ #) <;._3 ]) setalpha (imgresize~ ([: <. DM_density_ja_ * |.@$)) 0&setalpha readimg AddonPath,'tiles26.png'
+  end.
+  empty''
+)
+
 NB. Form definitions
 NB. =========================================================
 MSWD=: 0 : 0
