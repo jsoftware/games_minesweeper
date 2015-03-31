@@ -25,7 +25,7 @@ droidwd_run=: create
   empty''
 )
 
-AddonPath=. jpath '~addons/games/minesweeper/'
+AddonPath=: jpath '~addons/games/minesweeper/'
 NB. Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles18.png'
 Tiles=: ,((2 2 $ #) <;._3 ]) readimg AddonPath,'tiles26.png'
 MFSizes=: ;:'small medium nonsquare large'
