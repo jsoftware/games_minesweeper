@@ -36,6 +36,7 @@ NB. Android screen has high dpi
   if. 'Android'-:UNAME do.
     imgstretch=. (i.@[ <.@* #@] % [) { ]
     imgresize=. ([: |: ([: {. [) imgstretch("0 _) [: ] [: |: ([: {: [) imgstretch("0 _) [: ] ])
+    android_getdisplaymetrics 0
     Tiles=: ,((2 2 $ #) <;._3 ]) setalpha (imgresize~ ([: <. DM_density_ja_ * |.@$)) 0&setalpha readimg AddonPath,'tiles26.png'
   end.
   empty''
