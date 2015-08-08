@@ -7,14 +7,13 @@ Note 'Example commands to run'
 
 MinesweeperWd_z_=: 3 : 0
   a=. conew 'mineswpwd'
-  create__a`start_droidwd__a@.IFJCDROID y
+  create__a y
 )
 
-require 'gl2 droidwd'
+require 'gl2'
 require 'games/minesweeper/minefield'
 coclass 'mineswpwd'
 coinsert 'mineswp jgl2'
-droidwd_run=: create
 
 3 : 0''
   if. IFQT do.
