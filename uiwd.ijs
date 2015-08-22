@@ -64,6 +64,30 @@ pas 0 0 0 0; pcenter;
 rem form end;
 )
 
+MSWDJA=: 0 : 0
+pc mswd nosize;pn "Minesweeper";
+menupop "&Game";
+menu new "&New Game";
+menu options "&Options";
+menusep;
+menu exit "&Quit";
+menupopz;
+menupop "&Help";
+menu help "&Instructions";
+menu about "&About";
+menupopz;
+
+bin v;
+bin v;
+wh _1 234; cc isifld isigraph flush;
+bin zv;
+wh _1 _2; cc sbar static;cn "status";
+bin z;
+bin z;
+pas 0 0 0 0; pcenter;
+rem form end;
+)
+
 MSOPTS=: 0 : 0
 pc msopts dialog owner closeok escclose closebutton;pn "Minesweeper Options";
 bin h;
@@ -83,7 +107,20 @@ pas 0 0;pcenter;
 NB. Methods
 NB. =========================================================
 
+onCreate=: 3 : 0
+  y=. ''
+  wd MSWDJA
+  NB. need unique handle for mswd window to handle multiple instances of class
+  MSWD_hwnd=: wd 'qhwndp'  NB. assign hwnd this for mswd in instance locale
+  mswd_startnew y
+  wd 'pshow'
+)
+
 create=: 3 : 0
+  if. IFJA do.
+    wd 'activity ', >coname''
+    return.
+  end.
   wd MSWD
   NB. need unique handle for mswd window to handle multiple instances of class
   MSWD_hwnd=: wd 'qhwndp'  NB. assign hwnd this for mswd in instance locale
@@ -104,7 +141,11 @@ mswd_update=: 3 : 0
   if. isend do.
     mswd_gameover msg
   else.
-    wd 'set sbar show "',msg,'"'
+    if. IFJA do.
+      wd 'set sbar text "',msg,'"'
+    else.
+      wd 'set sbar show "',msg,'"'
+    end.
     wd 'set isifld invalid'
     empty''
   end.
@@ -113,12 +154,22 @@ mswd_update=: 3 : 0
 mswd_gameover=: 3 : 0
   result=. ('K'={.y) {:: 'won';'lost'
   msg=. y,LF,LF,' You ',result,'! Try again?'
+  if. IFJA do.
+    wd 'mb query dialog "Game Over" "',msg,'"'
+    return.
+  end.
   playagain=. wd 'mb query mb_yes mb_no "Game Over" "',msg,'"'
   select. playagain
     case. 'yes' do. mswd_startnew |.$Map
     case. 'no'  do. destroy''
   end.
 )
+
+mswd_dialog_positive=: 3 : 0
+  mswd_startnew |.$Map
+)
+
+mswd_dialog_negative=: destroy
 
 mswd_resize=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
@@ -137,6 +188,7 @@ mswd_new_button=: 3 : 0
 )
 
 mswd_options_button=: 3 : 0
+  if. IFJA do. return. end.
   wd MSOPTS
   sz=. ;(MFSizes,<'small') {~ MFSize_vals i. |.$Map
   wd 'set ',sz,' value 1'
@@ -172,11 +224,19 @@ mswd_isifld_mbrup=: 3 : 0
 mswd_isifld_mbldbl=: mswd_isifld_mbrup  NB. android does not have right click
 
 mswd_about_button=: 3 : 0
-  sminfo 'About Minesweeper';About
+  if. IFJA do.
+    wd'mb info *',About
+  else.
+    sminfo 'About Minesweeper';About
+  end.
 )
 
 mswd_help_button=: 3 : 0
-  sminfo 'Minesweeper Instructions';Instructions
+  if. IFJA do.
+    wd'mb info *',Instructions
+  else.
+    sminfo 'Minesweeper Instructions';Instructions
+  end.
 )
 
 NB. Text Nouns
