@@ -107,7 +107,7 @@ pas 0 0;pcenter;
 NB. Methods
 NB. =========================================================
 
-onCreate=: 3 : 0
+onStart=: 3 : 0
   y=. ''
   wd MSWDJA
   NB. need unique handle for mswd window to handle multiple instances of class
