@@ -209,7 +209,7 @@ mswd_isifld_paint=: 3 : 0
   glmark^:IFJA ''
   imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd  NB. get matrix of argb values to paint
   glpixels 0 0,(($>{.Tiles)*$Map), , imgpixels  NB. the real "paint"
-  glpaint`glpaints@.IFJA ''
+  glpaint`(glcmds@gltrash)@.IFJA ''
 )
 
 mswd_isifld_mblup=: 3 : 0
