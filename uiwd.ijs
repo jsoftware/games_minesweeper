@@ -216,7 +216,7 @@ mswd_dialog_negative=: destroy
 mswd_resize=: 3 : 0
   isisz=. ($>{.Tiles)*$Map
   wd 'psel ', MSWD_hwnd
-  if. IFQT do.
+  if. IFQT+.IFJA do.
   wd 'set isifld minwh ',": isisz
   wd^:(-.'Android'-:UNAME) 'pmove _1 _1 1 1'
   else.
@@ -252,10 +252,9 @@ mswd_close=: destroy
 mswd_cancel=: destroy
 
 mswd_isifld_paint=: 3 : 0
-  glmark^:IFJA ''
   imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd  NB. get matrix of argb values to paint
   glpixels 0 0,(($>{.Tiles)*$Map), , imgpixels  NB. the real "paint"
-  glpaint`(glcmds@gltrash)@.IFJA ''
+  glpaint`glpaintx@.IFJA ''
 )
 
 mswd_isifld_mblup=: 3 : 0
