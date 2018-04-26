@@ -14,7 +14,9 @@ Authors: Ric Sherlock, Bill Lam and Raul Miller.
 
 VERSION=: '1.0.52'
 
-RELEASE=: 'j804 j805 j806 j807'
+RELEASE=: ''
+
+FOLDER=: 'games/minesweeper'
 
 PLATFORMS=: ''
 
