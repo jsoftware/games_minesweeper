@@ -254,7 +254,7 @@ mswd_cancel=: destroy
 mswd_isifld_paint=: 3 : 0
   imgpixels=. ; ,.&.>/"1 Tiles showField IsEnd  NB. get matrix of argb values to paint
   glpixels 0 0,(($>{.Tiles)*$Map), , imgpixels  NB. the real "paint"
-  glpaint`glpaintx@.IFJA ''
+  glpaintx^:IFJA ''
 )
 
 mswd_isifld_mblup=: 3 : 0
