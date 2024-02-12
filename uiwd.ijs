@@ -18,7 +18,7 @@ coinsert 'mineswp jgl2'
 3 : 0''
   if. IFQT do.
     readimg=: readimg_jqtide_
-  elseif. 'Android'-:UNAME do.
+  elseif. IFJA do.
     readimg=: readimg_ja_
   elseif. IFJNET do.
     readimg=: readimg_jnet_
@@ -37,7 +37,7 @@ MFSize_vals=: 9 9, 12 12, 12 15,: 20 20
 
 NB. Android screen has high dpi
 3 : 0''
-  if. 'Android'-:UNAME do.
+  if. IFJA do.
     imgstretch=. (i.@[ <.@* #@] % [) { ]
     imgresize=. ([: |: ([: {. [) imgstretch("0 _) [: ] [: |: ([: {: [) imgstretch("0 _) [: ] ])
     android_getdisplaymetrics 0
@@ -207,6 +207,13 @@ mswd_gameover=: 3 : 0
   end.
 )
 
+mswd_qmessagebox_button=: 3 : 0
+  select. '*' taketo wd'getp sysdata'
+    case. 'yes' do. mswd_startnew |.$Map
+    case. 'no'  do. destroy''
+  end.
+)
+
 mswd_dialog_positive=: 3 : 0
   mswd_startnew |.$Map
 )
@@ -218,7 +225,7 @@ mswd_resize=: 3 : 0
   wd 'psel ', MSWD_hwnd
   if. IFQT+.IFJA do.
   wd 'set isifld minwh ',": isisz
-  wd^:(-.'Android'-:UNAME) 'pmove _1 _1 1 1'
+  wd^:(-.IFJA) 'pmove _1 _1 1 1'
   else.
   wd 'setxywhx isifld ',": 0 0, isisz
   end.
